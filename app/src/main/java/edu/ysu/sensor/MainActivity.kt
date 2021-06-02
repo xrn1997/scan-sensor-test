@@ -1,20 +1,18 @@
-package edu.ysu.scansensordevice
+package edu.ysu.sensor
 
-import android.content.Context
 import android.content.Intent
 import android.hardware.Sensor
 import android.hardware.SensorEvent
-import android.hardware.SensorEventListener
-import android.hardware.SensorManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
-import edu.ysu.scansensordevice.databinding.ActivityMainBinding
+import edu.ysu.sensor.databinding.ActivityMainBinding
+import edu.ysu.sensor.entity.Location
+import edu.ysu.sensor.event.NewStepEvent
+import edu.ysu.sensor.service.SensorService
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import java.lang.StringBuilder
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -51,7 +49,7 @@ class MainActivity : AppCompatActivity() {
      * 更新UI
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
-     fun onSensorChanged(event: SensorEvent) {
+    fun onSensorChanged(event: SensorEvent) {
         val values = event.values
         when (event.sensor.type) {
             Sensor.TYPE_ACCELEROMETER ->
@@ -77,5 +75,13 @@ class MainActivity : AppCompatActivity() {
             Sensor.TYPE_AMBIENT_TEMPERATURE ->
                 binding.textView11.text = ("${values[0]}")
         }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun pdrStepEvent(newStepEvent: NewStepEvent) {
+        val newLocation: Location = newStepEvent.data
+        binding.textView12.text = (
+                "最新位置:(${newLocation.x}，${newLocation.y}) \n" +
+                "步数: ${newStepEvent.msg} \n")
     }
 }

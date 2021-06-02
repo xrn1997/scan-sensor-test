@@ -1,4 +1,4 @@
-package edu.ysu.scansensordevice
+package edu.ysu.sensor
 
 import org.junit.Test
 

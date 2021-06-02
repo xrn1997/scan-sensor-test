@@ -1,2 +1,2 @@
-rootProject.name = "scanSensorDevice"
+rootProject.name = "scan-sensor-device"
 include ':app'
