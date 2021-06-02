@@ -12,20 +12,32 @@ import android.hardware.SensorManager
  * @date 2021/6/2
  */
 class DeviceAttitudeHandler(
-    private var sensorManager:SensorManager
+    private var sensorManager: SensorManager
 ) : SensorEventListener {
 
-    var sensor: Sensor? = null
+    private var magneticField: Sensor? = null
+    private var accelerometer: Sensor? = null
 
-   val orientationValues = ArrayList<Float>(3)
+    private val accelerometerReading = FloatArray(3)
+    private val magnetometerReading = FloatArray(3)
+
+    val rotationMatrix = FloatArray(9)
+    val orientationAngles = FloatArray(3)
 
     override fun onSensorChanged(event: SensorEvent) {
-        orientationValues[0]=event.values[0]
-        orientationValues[1]=event.values[1]
-        orientationValues[2]=event.values[2]
+        if (event.sensor.type == Sensor.TYPE_ACCELEROMETER) {
+            System.arraycopy(event.values, 0, accelerometerReading, 0, accelerometerReading.size)
+        } else if (event.sensor.type == Sensor.TYPE_MAGNETIC_FIELD) {
+            System.arraycopy(event.values, 0, magnetometerReading, 0, magnetometerReading.size)
+        }
+        updateOrientationAngles()
     }
+
     fun start() {
-        sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL)
+        // 为加速度传感器注册监听器
+        sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL)
+        // 为磁场传感器注册监听器
+        sensorManager.registerListener(this, magneticField, SensorManager.SENSOR_DELAY_NORMAL)
     }
 
     fun stop() {
@@ -33,11 +45,18 @@ class DeviceAttitudeHandler(
     }
 
     init {
-        sensor=sensorManager.getDefaultSensor(SENSOR_TYPE)
+        sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
+        sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)
     }
 
-    companion object {
-        private const val SENSOR_TYPE = Sensor.TYPE_ORIENTATION
+    fun updateOrientationAngles() {
+        SensorManager.getRotationMatrix(
+            rotationMatrix,
+            null,
+            accelerometerReading,
+            magnetometerReading
+        )
+        SensorManager.getOrientation(rotationMatrix, orientationAngles)
     }
 
     override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {}
