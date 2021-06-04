@@ -246,25 +246,25 @@ $$
 
 $$
 \begin{bmatrix}
-X\\Y
+X \\ Y
 \end{bmatrix}=
 \begin{bmatrix}
 cos\theta&-sin\theta\\
 sin\theta&cos\theta\\
 \end{bmatrix}
 \begin{bmatrix}
-X'\\Y'
+X' \\ Y'
 \end{bmatrix}
 {\mbox{或者}}
 \begin{bmatrix}
-X'\\Y'
+X' \\ Y'
 \end{bmatrix}=
 \begin{bmatrix}
 cos\theta&sin\theta\\
 -sin\theta&cos\theta\\
 \end{bmatrix}
 \begin{bmatrix}
-X\\Y
+X \\ Y
 \end{bmatrix}
 $$
 
