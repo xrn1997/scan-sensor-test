@@ -219,7 +219,7 @@
 
 ​	通常，传感器框架使用标准的 3 轴坐标系来表示数据值。对于大多数传感器，当设备处于**自然屏幕方向**时，会相对于设备屏幕来定义坐标系（参见图 1）。当设备处于默认屏幕方向时，X 轴为水平向右延伸，Y 轴为垂直向上延伸，Z 轴为垂直于屏幕向外延伸。在此坐标系中，屏幕后面的坐标将具有负 Z 值。以下传感器使用此坐标系：**加速度传感器**、**重力传感器**、**陀螺仪**、**线性加速度传感器**、**地磁场传感器**。
 
- ![Sensor API 使用的坐标系](https://developer.android.google.cn/images/axis_device.png)
+ ![Sensor API 使用的坐标系](https://developer.android.google.cn/images/axis_device.png){:height="100" width="100"}
 
 图1 Sensor API 使用的坐标系（相对于设备）
 
