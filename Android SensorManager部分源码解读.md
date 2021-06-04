@@ -249,8 +249,8 @@ $$
 X \\ Y
 \end{bmatrix}=
 \begin{bmatrix}
-cos\theta&-sin\theta\\
-sin\theta&cos\theta\\
+cos \theta & -sin \theta \\
+sin \theta & cos \theta \\
 \end{bmatrix}
 \begin{bmatrix}
 X' \\ Y'
@@ -260,8 +260,8 @@ X' \\ Y'
 X' \\ Y'
 \end{bmatrix}=
 \begin{bmatrix}
-cos\theta&sin\theta\\
--sin\theta&cos\theta\\
+cos \theta & sin \theta \\
+-sin \theta & cos \theta \\
 \end{bmatrix}
 \begin{bmatrix}
 X \\ Y
@@ -277,45 +277,45 @@ $$
 ​	假设两个空间坐标系O-XYZ与O'-X'Y'Z'之间只存在一个坐标轴的旋转，若坐标系O-XYZ绕自身的X轴逆时针转theta之后与坐标系O’-X'Y'Z'重合，空间中某点M在坐标系O-XYZ和O'-X'Y'Z'中的坐标描述存在以下关系：
 $$
 \begin{bmatrix}
-X'\\Y'\\Z'
+X' \\ Y' \\ Z'
 \end{bmatrix}=
 \begin{bmatrix}
-1&0&0\\
-0&cos\theta&sin\theta\\
-0&-sin\theta&cos\theta\\
+1 & 0 & 0 \\
+0 & cos \theta & sin \theta \\
+0 & -sin \theta & cos \theta \\
 \end{bmatrix}
 \begin{bmatrix}
-X\\Y\\Z
+X \\ Y \\ Z
 \end{bmatrix}
 {\mbox{(绕X轴)}}
 $$
 同理，绕Y轴和绕Z轴的对应坐标关系如下：
 $$
 \begin{bmatrix}
-X'\\Y'\\Z'
+X' \\ Y' \\ Z'
 \end{bmatrix}=
 \begin{bmatrix}
-cos\theta&0&-sin\theta\\
-0&1&0\\
-sin\theta&0&cos\theta\\
+cos \theta & 0 & -sin \theta \\
+0 & 1 & 0 \\
+sin \theta & 0 & cos \theta \\
 \end{bmatrix}
 \begin{bmatrix}
-X\\Y\\Z
+X \\ Y \\ Z
 \end{bmatrix}
 {\mbox{(绕Y轴)}}
 $$
 
 $$
 \begin{bmatrix}
-X'\\Y'\\Z'
+X' \\ Y' \\ Z'
 \end{bmatrix}=
 \begin{bmatrix}
-cos\theta&sin\theta&0\\
--sin\theta&cos\theta&0\\
-0&0&1\\
+cos \theta & sin \theta & 0 \\
+-sin \theta & cos \theta & 0 \\
+0 & 0 & 1 \\
 \end{bmatrix}
 \begin{bmatrix}
-X\\Y\\Z
+X \\ Y \\ Z
 \end{bmatrix}
 {\mbox{(绕Z轴)}}
 $$
@@ -325,25 +325,25 @@ $$
 ​	可以证明（具体证明过程可以查文献）：对于存在任意旋转变换的两个空间坐标系O-XYZ和O'-X'Y'Z'，可以通过依次绕三个坐标轴旋转一定角度实现两个坐标系对应坐标轴的重合。这里，我们假设坐标系O-XYZ依次绕自身X轴、Y轴、Z轴分别逆时针转θ1，θ2，θ3后可以与坐标系O'-X'Y'Z'重合，则空间中某点M在这两个坐标系中的描述关系如下：
 $$
 \begin{bmatrix}
-X'\\Y'\\Z'
+X' \\ Y' \\ Z'
 \end{bmatrix}=
 \begin{bmatrix}
-cos\theta_3&sin\theta_3&0\\
--sin\theta_3&cos\theta_3&0\\
-0&0&1\\
+cos \theta_3 & sin \theta_3 & 0 \\
+-sin \theta_3 & cos \theta_3 & 0 \\
+0 & 0 & 1\\
 \end{bmatrix}
 \begin{bmatrix}
-cos\theta_2&0&-sin\theta_2\\
-0&1&0\\
-sin\theta_2&0&cos\theta_2\\
+cos \theta_2 & 0 & -sin \theta_2 \\
+0 & 1 & 0\\
+sin \theta_2 & 0 & cos \theta_2 \\
 \end{bmatrix}
 \begin{bmatrix}
-1&0&0\\
-0&cos\theta_1&sin\theta_1\\
-0&-sin\theta_1&cos\theta_1\\
+1 & 0 & 0 \\
+0 & cos \theta_1 & sin \theta_1 \\
+0 & -sin \theta_1 & cos \theta_1 \\
 \end{bmatrix}
 \begin{bmatrix}
-X\\Y\\Z
+X \\ Y \\ Z
 \end{bmatrix}
 $$
 
