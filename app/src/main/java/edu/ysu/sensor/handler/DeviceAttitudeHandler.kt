@@ -49,7 +49,7 @@ class DeviceAttitudeHandler(
         sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)
     }
 
-    fun updateOrientationAngles() {
+    private fun updateOrientationAngles() {
         SensorManager.getRotationMatrix(
             rotationMatrix,
             null,

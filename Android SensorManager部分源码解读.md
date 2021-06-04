@@ -231,6 +231,123 @@
 
 #### 1.2.2旋转矩阵
 
+为了方便理解旋转矩阵的概念，我们首先从二维旋转矩阵开始。如图2，同样的一个点，虽然位置不变，但是在旋转前和旋转后的坐标系中，坐标是不一样的。设旋转前为(X,Y)，旋转后为(X',Y')。
+
+<img src="image/二维旋转坐标系示意图.png" style="zoom: 20%;" />
+
+​																							图2 二维旋转坐标系示意图
+$$
+{\mbox{坐标之间的关系}}
+\begin{cases} 
+X=X’\cdot cos\theta-Y'\cdot sin\theta \\ 
+Y=X’\cdot sin\theta+Y'\cdot cos\theta\\ 
+\end{cases}\\
+$$
+
+$$
+\begin{bmatrix}
+X\\Y
+\end{bmatrix}=
+\begin{bmatrix}
+cos\theta&-sin\theta\\
+sin\theta&cos\theta\\
+\end{bmatrix}
+\begin{bmatrix}
+X'\\Y'
+\end{bmatrix}
+{\mbox{或者}}
+\begin{bmatrix}
+X'\\Y'
+\end{bmatrix}=
+\begin{bmatrix}
+cos\theta&sin\theta\\
+-sin\theta&cos\theta\\
+\end{bmatrix}
+\begin{bmatrix}
+X\\Y
+\end{bmatrix}
+$$
+
+​	上面的公式就是2D平民的旋转矩阵的由来。至此，我们可以将2D平面的旋转问题提升到3D空间的旋转问题，即分别绕三个轴作类似2D的旋转变换。需要额外注意的两个的问题是：
+
+①当绕某根轴旋转时，其他两轴建立的2D坐标系应该保证旋转轴的正方向垂直纸面向外（与旋转角正方向定义相关）；
+
+②空间坐标系的旋转关系与各坐标轴的旋转顺序相关。
+
+​	假设两个空间坐标系O-XYZ与O'-X'Y'Z'之间只存在一个坐标轴的旋转，若坐标系O-XYZ绕自身的X轴逆时针转theta之后与坐标系O’-X'Y'Z'重合，空间中某点M在坐标系O-XYZ和O'-X'Y'Z'中的坐标描述存在以下关系：
+$$
+\begin{bmatrix}
+X'\\Y'\\Z'
+\end{bmatrix}=
+\begin{bmatrix}
+1&0&0\\
+0&cos\theta&sin\theta\\
+0&-sin\theta&cos\theta\\
+\end{bmatrix}
+\begin{bmatrix}
+X\\Y\\Z
+\end{bmatrix}
+{\mbox{(绕X轴)}}
+$$
+同理，绕Y轴和绕Z轴的对应坐标关系如下：
+$$
+\begin{bmatrix}
+X'\\Y'\\Z'
+\end{bmatrix}=
+\begin{bmatrix}
+cos\theta&0&-sin\theta\\
+0&1&0\\
+sin\theta&0&cos\theta\\
+\end{bmatrix}
+\begin{bmatrix}
+X\\Y\\Z
+\end{bmatrix}
+{\mbox{(绕Y轴)}}
+$$
+
+$$
+\begin{bmatrix}
+X'\\Y'\\Z'
+\end{bmatrix}=
+\begin{bmatrix}
+cos\theta&sin\theta&0\\
+-sin\theta&cos\theta&0\\
+0&0&1\\
+\end{bmatrix}
+\begin{bmatrix}
+X\\Y\\Z
+\end{bmatrix}
+{\mbox{(绕Z轴)}}
+$$
+
+这里绕Y轴变换的旋转矩阵符号的问题就是
+
+​	可以证明（具体证明过程可以查文献）：对于存在任意旋转变换的两个空间坐标系O-XYZ和O'-X'Y'Z'，可以通过依次绕三个坐标轴旋转一定角度实现两个坐标系对应坐标轴的重合。这里，我们假设坐标系O-XYZ依次绕自身X轴、Y轴、Z轴分别逆时针转θ1，θ2，θ3后可以与坐标系O'-X'Y'Z'重合，则空间中某点M在这两个坐标系中的描述关系如下：
+$$
+\begin{bmatrix}
+X'\\Y'\\Z'
+\end{bmatrix}=
+\begin{bmatrix}
+cos\theta_3&sin\theta_3&0\\
+-sin\theta_3&cos\theta_3&0\\
+0&0&1\\
+\end{bmatrix}
+\begin{bmatrix}
+cos\theta_2&0&-sin\theta_2\\
+0&1&0\\
+sin\theta_2&0&cos\theta_2\\
+\end{bmatrix}
+\begin{bmatrix}
+1&0&0\\
+0&cos\theta_1&sin\theta_1\\
+0&-sin\theta_1&cos\theta_1\\
+\end{bmatrix}
+\begin{bmatrix}
+X\\Y\\Z
+\end{bmatrix}
+$$
+
+
 #### 1.2.3计算原理
 
 ​	三维空间中只需要3个基向量即可表示空间中所有的向量，想要获得的3*3旋转矩阵**R**实际上是一组规范正交基。也就是说，我们希望通过磁场和重力获得这样一个**R**矩阵，当设备满足以下条件：

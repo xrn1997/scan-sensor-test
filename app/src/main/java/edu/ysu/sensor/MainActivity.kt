@@ -5,6 +5,7 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import edu.ysu.sensor.databinding.ActivityMainBinding
 import edu.ysu.sensor.entity.Location
@@ -13,6 +14,8 @@ import edu.ysu.sensor.service.SensorService
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import kotlin.math.pow
+import kotlin.math.sqrt
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -58,8 +61,11 @@ class MainActivity : AppCompatActivity() {
                 binding.textView2.text = ("X${values[0]},Y${values[1]},Z${values[2]}")
             Sensor.TYPE_MAGNETIC_FIELD ->
                 binding.textView3.text = ("X${values[0]},Y${values[1]},Z${values[2]}")
-            Sensor.TYPE_GRAVITY ->
+            Sensor.TYPE_GRAVITY ->{
+                Log.e("重力向量", "X${values[0]}  Y${values[1]}  Z${values[2]}" +
+                        " ${sqrt(values[0].toDouble().pow(2.0) +values[1].toDouble().pow(2.0) +values[2].toDouble().pow(2.0) )}")
                 binding.textView4.text = ("X${values[0]},Y${values[1]},Z${values[2]}")
+            }
             Sensor.TYPE_LINEAR_ACCELERATION ->
                 binding.textView5.text = ("X${values[0]},Y${values[1]},Z${values[2]}")
             Sensor.TYPE_PRESSURE ->
