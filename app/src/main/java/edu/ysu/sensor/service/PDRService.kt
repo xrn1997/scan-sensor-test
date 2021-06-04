@@ -44,7 +44,7 @@ class PDRService : Service() {
         stepDetectionHandler.setStepListener(object : StepDetectionHandler.StepDetectionListener {
             override fun newStep(stepSize: Float) {
                 val newLocation =
-                    PDRUtil.computeNextStep(stepSize, deviceAttitudeHandler.orientationValues[0])
+                    PDRUtil.computeNextStep(stepSize, deviceAttitudeHandler.orientationAngles[0])
                 EventBus.getDefault().post(NewStepEvent(stepDetectionHandler.step.toString(), newLocation))
             }
 
