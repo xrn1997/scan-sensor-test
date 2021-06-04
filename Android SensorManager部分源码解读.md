@@ -145,7 +145,7 @@
         float Ax = gravity[0];
         float Ay = gravity[1];
         float Az = gravity[2];
-		// normsqA是向量点乘。
+        // normsqA是向量点乘。
         final float normsqA = (Ax * Ax + Ay * Ay + Az * Az);
         final float g = 9.81f;
         final float freeFallGravitySquared = 0.01f * g * g;
@@ -237,7 +237,7 @@
 
 ​																							图2 二维旋转坐标系示意图
 
-注：Typora可正常查看LaTeX数学公式，Github上查看数学公式需要安装谷歌插件——[MathJax Plugin for Github]([MathJax Plugin for Github - Chrome 网上应用店 (google.com)](https://chrome.google.com/webstore/detail/mathjax-plugin-for-github/ioemnmodlmafdkllaclgeombjnmnbima))
+注：Typora可正常查看LaTeX数学公式，Github上查看数学公式需要安装谷歌浏览器插件——[MathJax Plugin for Github - Chrome 网上应用店 (google.com)](https://chrome.google.com/webstore/detail/mathjax-plugin-for-github/ioemnmodlmafdkllaclgeombjnmnbima)
 $$
 {\mbox{坐标之间的关系}}
 \begin{cases}
