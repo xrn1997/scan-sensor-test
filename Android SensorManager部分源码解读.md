@@ -239,8 +239,8 @@
 $$
 {\mbox{坐标之间的关系}}
 \begin{cases}
-X=X' \cdot cos \theta - Y'\cdot sin \theta \\
-Y=X' \cdot sin \theta + Y'\cdot cos \theta \\
+X=X' \cdot cos \theta - Y'\cdot sin \theta \\\\
+Y=X' \cdot sin \theta + Y'\cdot cos \theta \\\\
 \end{cases}
 $$
 
