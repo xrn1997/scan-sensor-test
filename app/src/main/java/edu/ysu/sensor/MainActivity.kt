@@ -10,6 +10,7 @@ import android.view.View
 import edu.ysu.sensor.databinding.ActivityMainBinding
 import edu.ysu.sensor.entity.Location
 import edu.ysu.sensor.event.NewStepEvent
+import edu.ysu.sensor.service.PDRService
 import edu.ysu.sensor.service.SensorService
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -41,6 +42,16 @@ class MainActivity : AppCompatActivity() {
                 stopService(intent)
             }
         }
+        binding.button2.setOnClickListener {
+            val intent = Intent(this, PDRService::class.java)
+            if (binding.button2.text == resources.getText(R.string.start_pdr)) {
+                binding.button2.text = resources.getText(R.string.stop_pdr)
+                startService(intent)
+            } else if (binding.button2.text == resources.getText(R.string.stop_pdr)) {
+                binding.button2.text = resources.getText(R.string.start_pdr)
+                stopService(intent)
+            }
+        }
     }
 
     override fun onDestroy() {
@@ -61,9 +72,16 @@ class MainActivity : AppCompatActivity() {
                 binding.textView2.text = ("X${values[0]},Y${values[1]},Z${values[2]}")
             Sensor.TYPE_MAGNETIC_FIELD ->
                 binding.textView3.text = ("X${values[0]},Y${values[1]},Z${values[2]}")
-            Sensor.TYPE_GRAVITY ->{
-                Log.e("重力向量", "X${values[0]}  Y${values[1]}  Z${values[2]}" +
-                        " ${sqrt(values[0].toDouble().pow(2.0) +values[1].toDouble().pow(2.0) +values[2].toDouble().pow(2.0) )}")
+            Sensor.TYPE_GRAVITY -> {
+                Log.e(
+                    "重力向量", "X${values[0]}  Y${values[1]}  Z${values[2]}" +
+                            " ${
+                                sqrt(
+                                    values[0].toDouble().pow(2.0) + values[1].toDouble()
+                                        .pow(2.0) + values[2].toDouble().pow(2.0)
+                                )
+                            }"
+                )
                 binding.textView4.text = ("X${values[0]},Y${values[1]},Z${values[2]}")
             }
             Sensor.TYPE_LINEAR_ACCELERATION ->
@@ -88,6 +106,6 @@ class MainActivity : AppCompatActivity() {
         val newLocation: Location = newStepEvent.data
         binding.textView12.text = (
                 "最新位置:(${newLocation.x}，${newLocation.y}) \n" +
-                "步数: ${newStepEvent.msg} \n")
+                        "步数: ${newStepEvent.msg} \n")
     }
 }

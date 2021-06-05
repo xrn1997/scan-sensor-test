@@ -10,6 +10,7 @@ import android.graphics.BitmapFactory
 import android.hardware.SensorManager
 import android.os.Build
 import android.os.IBinder
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import edu.ysu.sensor.MainActivity
 import edu.ysu.sensor.R
@@ -78,6 +79,7 @@ class PDRService : Service() {
         deviceAttitudeHandler.start()
         return super.onStartCommand(intent, flags, startId)
     }
+
 
     override fun onDestroy() {
         super.onDestroy()

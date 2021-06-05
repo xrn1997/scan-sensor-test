@@ -4,6 +4,8 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import android.util.Log
+import kotlin.math.atan2
 
 
 /**
@@ -12,7 +14,7 @@ import android.hardware.SensorManager
  * @date 2021/6/2
  */
 class DeviceAttitudeHandler(
-    private var sensorManager: SensorManager
+    var sensorManager: SensorManager
 ) : SensorEventListener {
 
     private var magneticField: Sensor? = null
@@ -45,8 +47,8 @@ class DeviceAttitudeHandler(
     }
 
     init {
-        sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
-        sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)
+        accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
+        magneticField = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)
     }
 
     private fun updateOrientationAngles() {
@@ -57,6 +59,15 @@ class DeviceAttitudeHandler(
             magnetometerReading
         )
         SensorManager.getOrientation(rotationMatrix, orientationAngles)
+        Log.e(
+            "对比",
+            "${atan2(rotationMatrix[3], rotationMatrix[4]) / Math.PI * 180}    " +
+                    "    ${orientationAngles[0] / Math.PI * 180}   " +
+                    "MX${rotationMatrix[3]},MY${rotationMatrix[4]}" +
+                    " AX${rotationMatrix[6]}  AY${rotationMatrix[7]}  AZ${rotationMatrix[8]} "+
+                    "${atan2(rotationMatrix[6], rotationMatrix[8]) / Math.PI * 180}"+"" +
+                    "${orientationAngles[2] / Math.PI * 180} "
+        )
     }
 
     override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {}
