@@ -239,12 +239,10 @@
 $$
 \begin{bmatrix}
 x' \\\\ y'
-\end{bmatrix}
-=
+\end{bmatrix}=
 \begin{bmatrix}
 x \\\\ y
-\end{bmatrix}
-+
+\end{bmatrix}+
 \begin{bmatrix}
 t_x \\\\ t_y
 \end{bmatrix}
