@@ -326,6 +326,8 @@ $$
 
 ​	我们可以围绕空间的任意轴旋转一个对象，但绕平行于坐标轴的轴的旋转是最容易处理的。我们同样可以利用围绕坐标轴旋转（结合适当的平移）的复合结果来表示任意一种旋转。因此，我们先考虑坐标轴的旋转操作，然后讨论其他旋转轴所需的计算。
 
+​	旋转分为两种，一种是旋转物体，一种是旋转坐标系，前者称为**主动旋转**，后者称为**被动旋转**。因为在Android中旋转主要是旋转手机，即旋转物体坐标系，所以以下只研究**被动旋转**。
+
 ​	为了方便理解，我们首先从二维旋转矩阵开始。如图2，同样的一个点，虽然位置不变，但是在旋转前和旋转后的坐标系中，坐标是不一样的。设旋转前为(x,y)，旋转后为(x',y')。
 
 <img src="image/二维旋转坐标系示意图.png" height="400" width="550" />
@@ -377,25 +379,25 @@ y' = y
 \end{cases}
 $$
 
-​	我们假设坐标系O-XYZ依次绕自身X轴、Y轴、Z轴分别逆时针转θ1，θ2，θ3后可以与坐标系O'-X'Y'Z'重合，则空间中某点M在这两个坐标系中的描述关系如下：
+​	我们假设坐标系O-XYZ依次绕自身Z轴、X轴、Y轴（Z-X-Y构成了一个旋转序列）分别逆时针转θ1，θ2，θ3后可以与坐标系O'-X'Y'Z'重合，则空间中某点M在这两个坐标系中的描述关系如下：
 $$
 \begin{bmatrix}
 x' \\\\ y' \\\\ z'
 \end{bmatrix}=
 \begin{bmatrix}
-cos \theta_3 & sin \theta_3 & 0 \\\\
--sin \theta_3 & cos \theta_3 & 0 \\\\
-0 & 0 & 1
-\end{bmatrix}
-\begin{bmatrix}
-cos \theta_2 & 0 & -sin \theta_2 \\\\
+cos \theta_3 & 0 & -sin \theta_3 \\\\
 0 & 1 & 0 \\\\
-sin \theta_2 & 0 & cos \theta_2 
+sin \theta_3 & 0 & cos \theta_3 
 \end{bmatrix}
 \begin{bmatrix}
 1 & 0 & 0 \\\\
-0 & cos \theta_1 & sin \theta_1 \\\\
-0 & -sin \theta_1 & cos \theta_1 
+0 & cos \theta_2 & sin \theta_2 \\\\
+0 & -sin \theta_2 & cos \theta_2 
+\end{bmatrix}
+\begin{bmatrix}
+cos \theta_1 & sin \theta_1 & 0 \\\\
+-sin \theta_1 & cos \theta_1 & 0 \\\\
+0 & 0 & 1
 \end{bmatrix}
 \begin{bmatrix}
 x \\\\ y \\\\ z
@@ -513,53 +515,48 @@ $$
 
 ### 2.2原理
 
+#### 2.2.1 Android 设备方向
+
 - **方位角（绕 Z轴旋转的角度）。**此为设备当前指南针方向与磁北向之间的角度。如果设备的上边缘面朝磁北向，则方位角为 0 度；如果上边缘朝南，则方位角为 180 度。与之类似，如果上边缘朝东，则方位角为 90 度；如果上边缘朝西，则方位角为 270 度。
 
-  **详细解释：**绕Z轴就只需要考虑XOY平面，如图3中的θ就是所求的方位角。这里需要解释说明的是，R矩阵是用物体坐标系来表示的，因此我们能获得的R矩阵实际上是用旋转后的物体坐标系表示的。换句话说，图3中的A点，我们只能获得(MX’,MY')，而不能获得(MX,MY)。代码中求方位角用的是Math.atan2（HY‘，MY’），实际上就是反三角函数arctan。乍一看有点懵逼，为什么可以用两个不同点的Y坐标呢？实际上这跟旋转矩阵有关，公式如下所示，将这个公式与代码进行比对就一目了然了。
-  $$
-  R=
-  \begin{bmatrix}
-  cos \phi cos \psi - sin \phi sin \psi sin \theta 
-  & sin \phi cos \theta 
-  & cos \phi sin \psi + sin \phi cos \psi sin \theta 
-  \\\\
-  - sin \phi cos \psi - cos \phi sin \psi sin \theta 
-  & cos \phi cos \theta 
-  & - sin \phi sin \psi + cos \phi cos \psi sin \theta 
-  \\\\
-  - sin \psi cos \theta
-  & - sin \theta 
-  &  cos \psi cos \theta 
-  \end{bmatrix}
-  $$
-  
-  <img src="image/方位角示意图.png" height="400" width="500" />
-  
-  <center>图3 方位角示意图</center>																
-  
-  注：为了画图、解释更方便，这里将向量直接用点来代替表示了，图4、图5同理。
-  
 - **俯仰角（绕 X轴旋转的角度）。**此为平行于设备屏幕的平面与平行于地面的平面之间的角度。如果将设备与地面平行放置，且其下边缘最靠近您，同时将设备上边缘向地面倾斜，则俯仰角将变为正值。沿相反方向倾斜（将设备上边缘向远离地面的方向移动）将使俯仰角变为负值。值的范围为 -180 度到 180 度。
-
-- **详细解释：**绕X轴就只需要考虑XOY平面，如图4中的θ就是所求的俯仰角。原理同**方向角**。
-
-  <img src="image/俯仰角示意图.png" height="400" width="500" />
-
-  <center>图4 俯仰角示意图</center>																										
-
-  Math.asin就是arcsin反三角函数。
 
 - **倾侧角（绕 Y 轴旋转的角度）。**此为垂直于设备屏幕的平面与垂直于地面的平面之间的角度。如果将设备与地面平行放置，且其下边缘最靠近您，同时将设备左边缘向地面倾斜，则侧倾角将变为正值。沿相反方向倾斜（将设备右边缘移向地面）将使侧倾角变为负值。值的范围为 -90 度到 90 度。
 
-  **详细解释：**绕X轴就只需要考虑XOZ平面，如图5中的θ就是所求的倾侧角。原理同**方向角**。
+#### 2.2.2 欧拉角
 
-  <img src="image/倾侧角示意图.png" height="400" width="500" />
+​	欧拉角的核心思想是：一个坐标系可以用另一个参考坐标系的三次空间旋转来表达。旋转坐标系的方法有两种：
 
-  <center>图5 倾侧角示意图</center>		
+​	① Proper Euler angles：第一次与第三次旋转相同的坐标轴。
+
+​	② Tait-Bryan angles：依次旋转三个不同的坐标轴。
+
+​	对于每个旋转序列（不同旋转序列会产生不同的选择矩阵），又分为**内在旋转**和**外在旋转**两种方式。设有两个坐标系O-XYZ和O-X'Y'Z'，其中O-XYZ是固定不动的参考系，O-X'Y'Z'是需要被旋转的坐标系，初始时两个坐标系重合。**内在旋转**指每次旋转的旋转轴都是上次变换后新系O-X'Y'Z'的坐标轴，**外在旋转**是指每次旋转的旋转轴都是固定参考系O-XYZ的坐标轴。**外在旋转等效于内在旋转的旋转序列的倒序**。
+
+​	下面给出Android源码中使用的被动旋转矩阵
+$$
+R_{Z_1X_2Y_3}=
+\begin{bmatrix}
+cos \phi cos \psi - sin \phi sin \psi sin \theta 
+& sin \phi cos \theta 
+& cos \phi sin \psi + sin \phi cos \psi sin \theta 
+\\\\
+- sin \phi cos \psi - cos \phi sin \psi sin \theta 
+& cos \phi cos \theta 
+& - sin \phi sin \psi + cos \phi cos \psi sin \theta 
+\\\\
+- sin \psi cos \theta
+& - sin \theta 
+&  cos \psi cos \theta 
+\end{bmatrix}
+$$
+​	上式中，φ为方位角，θ为俯仰角，ψ为倾侧角。
+
+​	如果问，为什么是旋转序列为ZXY，理由并不复杂：ZXY对应AHM，在getRotationMatrix函数中，向量H是根据向量A计算出的，向量M又是根据向量H和向量A计算出的。所以对于旋转来说，先确定Z轴，再确定X轴，最后确定Y轴就不言而喻了。
 
 ### 2.3代码解释
 
-​	getOrientation函数的代码比较简单，没有什么复杂的逻辑，详细的原理已经在**2.2**中解释清楚了，这里只解释一下Math.atan2函数的使用，atan2的具体公式如图6。
+​	getOrientation函数的代码比较简单，没有什么复杂的逻辑，只需要将代码与**2.2.2**中给出的公式对比一下即可。这里只解释一下Math.atan2函数的使用，atan2的具体公式如图6。
 
 ![](.\image\atan2公式.png)
 
