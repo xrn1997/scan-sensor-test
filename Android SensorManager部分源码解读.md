@@ -219,9 +219,9 @@
 
 ​	通常，传感器框架使用标准的 3 轴坐标系来表示数据值。对于大多数传感器，当设备处于**自然屏幕方向**时，会相对于设备屏幕来定义坐标系（参见图 1）。当设备处于**自然屏幕方向**时，X 轴为水平向右延伸，Y 轴为垂直向上延伸，Z 轴为垂直于屏幕向外延伸。在此坐标系中，屏幕后面的坐标将具有负 Z 值。以下传感器使用此坐标系：**加速度传感器**、**重力传感器**、**陀螺仪**、**线性加速度传感器**、**地磁场传感器**。
 
- ![Sensor API 使用的坐标系](https://developer.android.google.cn/images/axis_device.png)
+<img src="https://developer.android.google.cn/images/axis_device.png"  />
 
-图1 Sensor API 使用的坐标系（相对于设备）
+<center>图1 Sensor API 使用的坐标系（相对于设备）</center>
 
 注1：在图形学中，这种坐标系叫做**物体坐标系**。物体坐标与物体绑定，不会因为物体在**世界坐标系**中状态的改变而改变。**世界坐标系**可以简单理解为可以描述其他所有坐标系或者物体的位置的最大坐标系。而安卓中的**世界坐标系**，经过验证，可以确定为：X轴正向为正北，Y轴正向为正东，Z轴正向指向天空（与重力方向相反）。
 
@@ -229,103 +229,158 @@
 
 注3：图1来自谷歌开发文档，侵删。
 
-#### 1.2.2旋转矩阵
+注4：Typora可正常查看下文的LaTeX数学公式，Github上查看数学公式需要安装谷歌浏览器插件——[MathJax Plugin for Github - Chrome 网上应用店 (google.com)](https://chrome.google.com/webstore/detail/mathjax-plugin-for-github/ioemnmodlmafdkllaclgeombjnmnbima)
 
-为了方便理解旋转矩阵的概念，我们首先从二维旋转矩阵开始。如图2，同样的一个点，虽然位置不变，但是在旋转前和旋转后的坐标系中，坐标是不一样的。设旋转前为(X,Y)，旋转后为(X',Y')。
+#### 1.2.2坐标基本变换（二维）
+
+##### 1.2.2.1二维平移
+
+​	将平移距离Tx和Ty加到原始坐标(x,y)上获得一个新的坐标位置(x',y')，可以实现一个二维位置的平移，写成矩阵形式为：
+$$
+\begin{bmatrix}
+x' \\\\ y'
+\end{bmatrix}
+=
+\begin{bmatrix}
+x \\\\ y
+\end{bmatrix}
++
+\begin{bmatrix}
+t_x \\\\ t_y
+\end{bmatrix}
+$$
+**1.2.2.2二维旋转**
+
+​	在极坐标系中，r是点到原点的固定距离，角度φ是点(x,y)的原始角度位置与水平线的夹角，θ是旋转角（**逆时针为正**），则旋转后的坐标(x',y')可以表示为：
+$$
+\begin{cases}
+x'= r (cos \theta + \phi ) = r cos \phi cos \theta - r sin \phi sin \theta  \\\\
+y'= r (sin \theta + \phi ) = r cos \phi sin \theta + r sin \phi cos \theta
+\end{cases}
+$$
+​	在极坐标系中，点的原始坐标为：
+$$
+x = r cos \theta ,  y = r sin \theta
+$$
+​	代入得：
+$$
+\begin{cases}
+x' = x cos \theta - y sin \theta  \\\\
+y' = x sin \theta + y cos \theta
+\end{cases}
+$$
+​	旋转矩阵R为：
+$$
+R ( \theta ) =
+\begin{bmatrix}
+cos \theta & - sin \theta \\\\ 
+sin \theta & cos \theta
+\end{bmatrix}
+$$
+
+​	写出矩阵形式为：
+$$
+\begin{bmatrix}
+x' \\\\ y'
+\end{bmatrix}=
+R \cdot
+\begin{bmatrix}
+x \\\\ y
+\end{bmatrix}
+$$
+
+##### 1.2.2.3二维缩放
+
+​	改变一个对象的大小，可以使用缩放变化。一个简单的二维缩放操作可以通过将缩放系数Sx和Sy与对象坐标位置(x,y)相乘而得，写成矩阵形式为：
+$$
+\begin{bmatrix}
+x' \\\\ y'
+\end{bmatrix}=
+\begin{bmatrix}
+s_x  & 0 \\\\
+0 & s_y 
+\end{bmatrix}
+\begin{bmatrix}
+x \\\\ y
+\end{bmatrix}
+$$
+当Sx和Sy相同时，就会产生保持对象相对比例的**一致缩放**，不同时就叫**差值缩放**。
+
+#### 1.2.3齐次坐标
+
+​	许多图形应用涉及到几何变化的顺序，在**1.2.2**节中我们已经看到，每个基本变换（平移、旋转和缩放）都可以表示为普通矩阵形式：
+$$
+P' = M_1 \cdot P + M_2
+$$
+坐标位置P’和P表示为列向量，矩阵M1是一个包含乘法系数的2×2矩阵，M2是包含平移项的两元素列矩阵。对于平移，M1是单位矩阵。对于旋转或缩放，M2包含与基准点或缩放固定点相关的平移项。为了利用这个公式产生先缩放、再旋转、后平移这样的变化顺序，必须一步一步地计算变换的坐标。而实际上，更有效的做法应该是将变换组合，从而直接从初始坐标得到最后的坐标位置，这样就消除了中间坐标值的计算。因此，需要重组等式以消除M2中与平移项相关的矩阵加法。
+
+​	如果将2×2矩阵表达式扩充为3×3矩阵，就可以把二维几何变化的乘法和平移项组合成单一矩阵表示。这时将变换矩阵的第三列用于平移项，而所有的变换公式可表达为矩阵乘法。但为了这样操作，必须解释二维坐标位置到三元列向量的矩阵表示。标准的实现技术是将二维坐标(X,Y)扩充到三维表示(Xh,Yh,h)，称为**齐次坐标**。这里的**齐次参数**h是一个非零值，因此
+$$
+x = \frac {x_h} {h} , y = \frac {y_h} {h}
+$$
+​	这样，普通的二维齐次坐标表示可写为(h·x,h·y,h)。对于二维几何变换，可以把齐次参数h取为任何非零值。因而，对于每个坐标点(x,y)，可以有无数个等价的齐次表达式。最方便的选择是简单地设置为h=1。因此每个二维位置都可以用齐次坐标(x,y,1)来表示。h的其他值也是需要的，例如在三维观察变换的矩阵公式中。
+
+​	**源码中之所以出现4×4的三维旋转矩阵，用的就是齐次坐标这一概念。**
+
+#### 1.2.4坐标系间的变换（三维旋转）
+
+​	我们可以围绕空间的任意轴旋转一个对象，但绕平行于坐标轴的轴的旋转是最容易处理的。我们同样可以利用围绕坐标轴旋转（结合适当的平移）的复合结果来表示任意一种旋转。因此，我们先考虑坐标轴的旋转操作，然后讨论其他旋转轴所需的计算。
+
+​	为了方便理解，我们首先从二维旋转矩阵开始。如图2，同样的一个点，虽然位置不变，但是在旋转前和旋转后的坐标系中，坐标是不一样的。设旋转前为(x,y)，旋转后为(x',y')。
 
 <img src="image/二维旋转坐标系示意图.png" height="400" width="550" />
 
-​																							图2 二维旋转坐标系示意图
+<center>图2 二维旋转坐标系示意图 </center>
 
-注：Typora可正常查看LaTeX数学公式，Github上查看数学公式需要安装谷歌浏览器插件——[MathJax Plugin for Github - Chrome 网上应用店 (google.com)](https://chrome.google.com/webstore/detail/mathjax-plugin-for-github/ioemnmodlmafdkllaclgeombjnmnbima)
+​	由**1.2.2.2**中公式可以得到，旋转矩阵R为：
 $$
-{\mbox{坐标之间的关系}}
+R ( - \theta ) =
+\begin{bmatrix}
+cos \theta &  sin \theta \\\\ 
+- sin \theta & cos \theta
+\end{bmatrix}
+$$
+​	因为逆时针旋转坐标系相当于顺时针旋转点，所以θ相反。至此，我们可以将2D平面的旋转问题提升到3D空间的旋转问题，即分别绕三个轴作类似2D的旋转变换。需要额外注意的两个的问题是：
+
+①通常，如果沿着坐标轴的正半轴观察原点，那么绕坐标轴的逆时针旋转为正向旋转；
+
+②空间坐标系的旋转关系(复合结果)与各坐标轴的旋转顺序相关。
+
+​	绕Z轴的二维坐标系旋转很容易推广到三维：
+$$
+z轴旋转
 \begin{cases}
-X=X' \cdot cos \theta - Y'\cdot sin \theta \\\\
-Y=X' \cdot sin \theta + Y'\cdot cos \theta 
+x' = x cos \theta + y sin \theta  \\\\
+y' = x sin \theta - y cos \theta \\\\
+z' = z
+\end{cases}
+$$
+
+
+
+​	同理，绕X轴和绕Y轴的对应坐标关系如下，可由上式用X->Y->Z->X顺序循环替换（将X替换为Y，将Y替换为Z，将Z替换为X）得到：
+$$
+x轴旋转
+\begin{cases}
+y' = y cos \theta + z sin \theta  \\\\
+z' = y sin \theta - z cos \theta \\\\
+x' = x
 \end{cases}
 $$
 
 $$
-\begin{bmatrix}
-X \\\\ Y
-\end{bmatrix}=
-\begin{bmatrix}
-cos \theta & -sin \theta \\\\
-sin \theta & cos \theta 
-\end{bmatrix}
-\begin{bmatrix}
-X' \\\\ Y'
-\end{bmatrix}
-{\mbox{或者}}
-\begin{bmatrix}
-X' \\\\ Y'
-\end{bmatrix}=
-\begin{bmatrix}
-cos \theta & sin \theta \\\\
--sin \theta & cos \theta 
-\end{bmatrix}
-\begin{bmatrix}
-X \\\\ Y
-\end{bmatrix}
+y轴旋转
+\begin{cases}
+z' = z cos \theta + x sin \theta  \\\\
+x' = z sin \theta - x cos \theta \\\\
+y' = y
+\end{cases}
 $$
 
-​	上面的公式就是2D平民的旋转矩阵的由来。至此，我们可以将2D平面的旋转问题提升到3D空间的旋转问题，即分别绕三个轴作类似2D的旋转变换。需要额外注意的两个的问题是：
-
-①通常，如果沿着坐标轴的正半轴观察原点，那么绕坐标轴的逆时针旋转为正向旋转；
-
-②空间坐标系的旋转关系与各坐标轴的旋转顺序相关X->Y->Z->X。
-
-​	假设两个空间坐标系O-XYZ与O'-X'Y'Z'之间只存在一个坐标轴的旋转，若坐标系O-XYZ绕自身的X轴逆时针转theta之后与坐标系O’-X'Y'Z'重合，空间中某点M在坐标系O-XYZ和O'-X'Y'Z'中的坐标描述存在以下关系：
+​	我们假设坐标系O-XYZ依次绕自身X轴、Y轴、Z轴分别逆时针转θ1，θ2，θ3后可以与坐标系O'-X'Y'Z'重合，则空间中某点M在这两个坐标系中的描述关系如下：
 $$
 \begin{bmatrix}
-X' \\\\ Y' \\\\ Z'
-\end{bmatrix}=
-\begin{bmatrix}
-1 & 0 & 0 \\\\
-0 & cos \theta & sin \theta \\\\
-0 & -sin \theta & cos \theta 
-\end{bmatrix}
-\begin{bmatrix}
-X \\\\ Y \\\\ Z
-\end{bmatrix}
-{\mbox{(绕X轴)}}
-$$
-同理，绕Y轴和绕Z轴的对应坐标关系如下，可由上式用X->Y->Z->X顺序循环替换（将X替换为Y，将Y替换为Z，将Z替换为X）得到：
-$$
-\begin{bmatrix}
-X' \\\\ Y' \\\\ Z'
-\end{bmatrix}=
-\begin{bmatrix}
-cos \theta & 0 & -sin \theta \\\\
-0 & 1 & 0 \\\\
-sin \theta & 0 & cos \theta 
-\end{bmatrix}
-\begin{bmatrix}
-X \\\\ Y \\\\ Z
-\end{bmatrix}
-{\mbox{(绕Y轴)}}
-$$
-
-$$
-\begin{bmatrix}
-X' \\\\ Y' \\\\ Z'
-\end{bmatrix}=
-\begin{bmatrix}
-cos \theta & sin \theta & 0 \\\\
--sin \theta & cos \theta & 0 \\\\
-0 & 0 & 1 
-\end{bmatrix}
-\begin{bmatrix}
-X \\\\ Y \\\\ Z
-\end{bmatrix}
-{\mbox{(绕Z轴)}}
-$$
-
-​	可以证明（具体证明过程可以查文献）：对于存在任意旋转变换的两个空间坐标系O-XYZ和O'-X'Y'Z'，可以通过依次绕三个坐标轴旋转一定角度实现两个坐标系对应坐标轴的重合。这里，我们假设坐标系O-XYZ依次绕自身X轴、Y轴、Z轴分别逆时针转θ1，θ2，θ3后可以与坐标系O'-X'Y'Z'重合，则空间中某点M在这两个坐标系中的描述关系如下：
-$$
-\begin{bmatrix}
-X' \\\\ Y' \\\\ Z'
+x' \\\\ y' \\\\ z'
 \end{bmatrix}=
 \begin{bmatrix}
 cos \theta_3 & sin \theta_3 & 0 \\\\
@@ -343,7 +398,7 @@ sin \theta_2 & 0 & cos \theta_2
 0 & -sin \theta_1 & cos \theta_1 
 \end{bmatrix}
 \begin{bmatrix}
-X \\\\ Y \\\\ Z
+x \\\\ y \\\\ z
 \end{bmatrix}
 $$
 
@@ -478,20 +533,19 @@ $$
   \end{bmatrix}
   $$
   
-
   <img src="image/方位角示意图.png" height="400" width="500" />
-
-  ​																							图3 方位角示意图
-
+  
+  <center>图3 方位角示意图</center>																
+  
   注：为了画图、解释更方便，这里将向量直接用点来代替表示了，图4、图5同理。
-
+  
 - **俯仰角（绕 X轴旋转的角度）。**此为平行于设备屏幕的平面与平行于地面的平面之间的角度。如果将设备与地面平行放置，且其下边缘最靠近您，同时将设备上边缘向地面倾斜，则俯仰角将变为正值。沿相反方向倾斜（将设备上边缘向远离地面的方向移动）将使俯仰角变为负值。值的范围为 -180 度到 180 度。
 
 - **详细解释：**绕X轴就只需要考虑XOY平面，如图4中的θ就是所求的俯仰角。原理同**方向角**。
 
   <img src="image/俯仰角示意图.png" height="400" width="500" />
 
-  ​																							图4 俯仰角示意图
+  <center>图4 俯仰角示意图</center>																										
 
   Math.asin就是arcsin反三角函数。
 
@@ -501,11 +555,11 @@ $$
 
   <img src="image/倾侧角示意图.png" height="400" width="500" />
 
-  ​                                                                                          图5 倾侧角示意图
+  <center>图5 倾侧角示意图</center>		
 
 ### 2.3代码解释
 
-getOrientation函数的代码是否简单，没有什么复杂的逻辑，详细的原理已经在**2.2**中解释清楚了，这里只解释一下Math.atan2函数的使用，atan2的具体公式如图6。
+​	getOrientation函数的代码比较简单，没有什么复杂的逻辑，详细的原理已经在**2.2**中解释清楚了，这里只解释一下Math.atan2函数的使用，atan2的具体公式如图6。
 
 ![](.\image\atan2公式.png)
 
