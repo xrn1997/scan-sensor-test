@@ -338,8 +338,8 @@ $$
 $$
 R ( - \theta ) =
 \begin{bmatrix}
-cos \theta &  sin \theta \\ 
-\\- sin \theta & cos \theta
+cos \theta &  sin \theta \\\\ 
+-sin \theta & cos \theta
 \end{bmatrix}
 $$
 ​	因为逆时针旋转坐标系相当于顺时针旋转点，所以θ相反。至此，我们可以将2D平面的旋转问题提升到3D空间的旋转问题，即分别绕三个轴作类似2D的旋转变换。需要额外注意的两个的问题是：
