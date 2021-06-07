@@ -219,7 +219,7 @@
 
 ​	通常，传感器框架使用标准的 3 轴坐标系来表示数据值。对于大多数传感器，当设备处于**自然屏幕方向**时，会相对于设备屏幕来定义坐标系（参见图 1）。当设备处于**自然屏幕方向**时，X 轴为水平向右延伸，Y 轴为垂直向上延伸，Z 轴为垂直于屏幕向外延伸。在此坐标系中，屏幕后面的坐标将具有负 Z 值。以下传感器使用此坐标系：**加速度传感器**、**重力传感器**、**陀螺仪**、**线性加速度传感器**、**地磁场传感器**。
 
-<img src="https://developer.android.google.cn/images/axis_device.png"  />
+<div align=center><img src="https://developer.android.google.cn/images/axis_device.png"  /></div>
 
 <p align="center">图1 Sensor API 使用的坐标系（相对于设备）</p>
 
@@ -328,9 +328,9 @@ $$
 
 ​	为了方便理解，我们首先从二维旋转矩阵开始。如图2，同样的一个点，虽然位置不变，但是在旋转前和旋转后的坐标系中，坐标是不一样的。设旋转前为(x,y)，旋转后为(x',y')。
 
-<img src="image/二维旋转坐标系示意图.png" height="400" width="550" />
+<div align=center><img src="image/二维旋转坐标系示意图.png" height="400" width="550" /></div>
 
-<center>图2 二维旋转坐标系示意图 </center>
+<p align="center">图2 二维旋转坐标系示意图 </p>
 
 ​	由**1.2.2.2**中公式可以得到，旋转矩阵R为：
 $$
@@ -552,9 +552,9 @@ $$
 
 ### 2.3代码解释
 
-​	getOrientation函数的代码比较简单，没有什么复杂的逻辑，只需要将代码与**2.2.2**中给出的公式对比一下即可。这里只解释一下Math.atan2函数的使用，atan2的具体公式如图6。
+​	getOrientation函数的代码比较简单，没有什么复杂的逻辑，只需要将代码与**2.2.2**中给出的公式对比一下即可。这里只解释一下Math.atan2函数的使用，atan2的具体公式如图。
 
-![](.\image\atan2公式.png)
+<div align=center><img src=".\image\atan2公式.png"/></div>								
 
-​																							图6 atan2公式
+<p align="center">图3 atan2公式</p>
 
