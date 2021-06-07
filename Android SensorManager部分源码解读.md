@@ -252,27 +252,27 @@ $$
 ​	在极坐标系中，r是点到原点的固定距离，角度φ是点(x,y)的原始角度位置与水平线的夹角，θ是旋转角（**逆时针为正**），则旋转后的坐标(x',y')可以表示为：
 $$
 \begin{cases}
-x'= r (cos \theta + \phi ) = r cos \phi cos \theta - r sin \phi sin \theta  \\\\
-y'= r (sin \theta + \phi ) = r cos \phi sin \theta + r sin \phi cos \theta
+x'=r(cos \theta + \phi ) =rcos \phi cos \theta -rsin \phi sin \theta  \\\\
+y'=r(sin \theta + \phi ) =rcos \phi sin \theta +rsin \phi cos \theta
 \end{cases}
 $$
 ​	在极坐标系中，点的原始坐标为：
 $$
-x = r cos \theta ,  y = r sin \theta
+x=rcos \theta ,y=rsin \theta
 $$
 ​	代入得：
 $$
 \begin{cases}
-x' = x cos \theta - y sin \theta  \\\\
-y' = x sin \theta + y cos \theta
+x'=xcos \theta -ysin \theta  \\\\
+y'=xsin \theta +ycos \theta
 \end{cases}
 $$
 ​	旋转矩阵R为：
 $$
-R ( \theta ) =
+R( \theta )=
 \begin{bmatrix}
-cos \theta & - sin \theta \\\\ 
-sin \theta & cos \theta
+cos \theta &-sin \theta \\\\ 
+sin \theta &cos \theta
 \end{bmatrix}
 $$
 
@@ -295,8 +295,8 @@ $$
 x' \\\\ y'
 \end{bmatrix}=
 \begin{bmatrix}
-s_x  & 0 \\\\
-0 & s_y 
+s_x&0 \\\\
+0&s_y 
 \end{bmatrix}
 \begin{bmatrix}
 x \\\\ y
@@ -308,13 +308,13 @@ $$
 
 ​	许多图形应用涉及到几何变化的顺序，在**1.2.2**节中我们已经看到，每个基本变换（平移、旋转和缩放）都可以表示为普通矩阵形式：
 $$
-P' = M_1 \cdot P + M_2
+P'=M_1 \cdot P+M_2
 $$
 坐标位置P’和P表示为列向量，矩阵M1是一个包含乘法系数的2×2矩阵，M2是包含平移项的两元素列矩阵。对于平移，M1是单位矩阵。对于旋转或缩放，M2包含与基准点或缩放固定点相关的平移项。为了利用这个公式产生先缩放、再旋转、后平移这样的变化顺序，必须一步一步地计算变换的坐标。而实际上，更有效的做法应该是将变换组合，从而直接从初始坐标得到最后的坐标位置，这样就消除了中间坐标值的计算。因此，需要重组等式以消除M2中与平移项相关的矩阵加法。
 
 ​	如果将2×2矩阵表达式扩充为3×3矩阵，就可以把二维几何变化的乘法和平移项组合成单一矩阵表示。这时将变换矩阵的第三列用于平移项，而所有的变换公式可表达为矩阵乘法。但为了这样操作，必须解释二维坐标位置到三元列向量的矩阵表示。标准的实现技术是将二维坐标(X,Y)扩充到三维表示(Xh,Yh,h)，称为**齐次坐标**。这里的**齐次参数**h是一个非零值，因此
 $$
-x = \frac {x_h} {h} , y = \frac {y_h} {h}
+x= \frac {x_h} {h} ,y = \frac {y_h} {h}
 $$
 ​	这样，普通的二维齐次坐标表示可写为(h·x,h·y,h)。对于二维几何变换，可以把齐次参数h取为任何非零值。因而，对于每个坐标点(x,y)，可以有无数个等价的齐次表达式。最方便的选择是简单地设置为h=1。因此每个二维位置都可以用齐次坐标(x,y,1)来表示。h的其他值也是需要的，例如在三维观察变换的矩阵公式中。
 
@@ -334,10 +334,10 @@ $$
 
 ​	由**1.2.2.2**中公式可以得到，旋转矩阵R为：
 $$
-R ( - \theta ) =
+R(- \theta )=
 \begin{bmatrix}
-cos \theta &  sin \theta \\\\ 
--sin \theta & cos \theta
+cos \theta &sin \theta \\\\ 
+-sin \theta &cos \theta
 \end{bmatrix}
 $$
 ​	因为逆时针旋转坐标系相当于顺时针旋转点，所以θ相反。至此，我们可以将2D平面的旋转问题提升到3D空间的旋转问题，即分别绕三个轴作类似2D的旋转变换。需要额外注意的两个的问题是：
@@ -350,9 +350,9 @@ $$
 $$
 z轴旋转
 \begin{cases}
-x' = x cos \theta + y sin \theta  \\\\
-y' = x sin \theta - y cos \theta \\\\
-z' = z
+x'=xcos \theta +ysin \theta \\\\
+y'=xsin \theta -ycos \theta \\\\
+z'=z
 \end{cases}
 $$
 
@@ -360,18 +360,18 @@ $$
 $$
 x轴旋转
 \begin{cases}
-y' = y cos \theta + z sin \theta  \\\\
-z' = y sin \theta - z cos \theta \\\\
-x' = x
+y'=ycos \theta +zsin \theta \\\\
+z'=ysin \theta -zcos \theta \\\\
+x'=x
 \end{cases}
 $$
 
 $$
 y轴旋转
 \begin{cases}
-z' = z cos \theta + x sin \theta  \\\\
-x' = z sin \theta - x cos \theta \\\\
-y' = y
+z'=zcos \theta +xsin \theta \\\\
+x'=zsin \theta -xcos \theta \\\\
+y'=y
 \end{cases}
 $$
 
@@ -381,19 +381,19 @@ $$
 x' \\\\ y' \\\\ z'
 \end{bmatrix}=
 \begin{bmatrix}
-cos \theta_3 & 0 & -sin \theta_3 \\\\
-0 & 1 & 0 \\\\
-sin \theta_3 & 0 & cos \theta_3 
+cos \theta_3&0&-sin \theta_3 \\\\
+0&1&0 \\\\
+sin \theta_3&0&cos \theta_3 
 \end{bmatrix}
 \begin{bmatrix}
-1 & 0 & 0 \\\\
-0 & cos \theta_2 & sin \theta_2 \\\\
-0 & -sin \theta_2 & cos \theta_2 
+1&0&0 \\\\
+0&cos \theta_2&sin \theta_2 \\\\
+0&-sin \theta_2&cos \theta_2 
 \end{bmatrix}
 \begin{bmatrix}
-cos \theta_1 & sin \theta_1 & 0 \\\\
--sin \theta_1 & cos \theta_1 & 0 \\\\
-0 & 0 & 1
+cos \theta_1&sin \theta_1&0 \\\\
+-sin \theta_1&cos \theta_1&0 \\\\
+0&0&1
 \end{bmatrix}
 \begin{bmatrix}
 x \\\\ y \\\\ z
@@ -533,17 +533,17 @@ $$
 $$
 R_{Z_1X_2Y_3}=
 \begin{bmatrix}
-cos \phi cos \psi - sin \phi sin \psi sin \theta 
-& sin \phi cos \theta 
-& cos \phi sin \psi + sin \phi cos \psi sin \theta 
+cos \phi cos \psi -sin \phi sin \psi sin \theta 
+&sin \phi cos \theta 
+&cos \phi sin \psi +sin \phi cos \psi sin \theta 
 \\\\
-- sin \phi cos \psi - cos \phi sin \psi sin \theta 
-& cos \phi cos \theta 
-& - sin \phi sin \psi + cos \phi cos \psi sin \theta 
+-sin \phi cos \psi -cos \phi sin \psi sin \theta 
+&cos \phi cos \theta 
+&-sin \phi sin \psi +cos \phi cos \psi sin \theta 
 \\\\
-- sin \psi cos \theta
-& - sin \theta 
-&  cos \psi cos \theta 
+-sin \psi cos \theta
+&-sin \theta 
+&cos \psi cos \theta 
 \end{bmatrix}
 $$
 ​	上式中，φ为方位角，θ为俯仰角，ψ为倾侧角。
