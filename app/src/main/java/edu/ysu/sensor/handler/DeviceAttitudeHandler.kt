@@ -5,6 +5,9 @@ import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.util.Log
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import kotlin.math.atan2
 
 
@@ -27,11 +30,15 @@ class DeviceAttitudeHandler(
 
     val rotationMatrix = FloatArray(9)
     val orientationAngles = FloatArray(3)
-
+    
+    private val job = Job()
     override fun onSensorChanged(event: SensorEvent) {
+        val scope= CoroutineScope(job)
         if (timestamp != 0f) {
             val dT = (event.timestamp - timestamp) * NS2S
-
+            scope.launch {
+                Log.e("数据", dT.toString() )
+            }
         }
         timestamp = event.timestamp.toFloat()
 
@@ -51,6 +58,7 @@ class DeviceAttitudeHandler(
     }
 
     fun stop() {
+        job.cancel()
         sensorManager.unregisterListener(this)
     }
 
