@@ -94,7 +94,7 @@ class SensorService : Service(), SensorEventListener {
         mSensorManager.registerListener(this, pressure, sensorDelayType)
         // 为加速度传感器注册监听器
         mSensorManager.registerListener(this, accelerometer, sensorDelayType)
-        // 为旋转速率传感器注册监听器
+        // 为陀螺仪传感器注册监听器
         mSensorManager.registerListener(this, gyroscope, sensorDelayType)
         // 为磁场传感器注册监听器
         mSensorManager.registerListener(this, magneticField, sensorDelayType)

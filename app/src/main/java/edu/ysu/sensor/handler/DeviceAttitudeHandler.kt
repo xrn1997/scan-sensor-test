@@ -23,10 +23,18 @@ class DeviceAttitudeHandler(
     private val accelerometerReading = FloatArray(3)
     private val magnetometerReading = FloatArray(3)
 
+    private var timestamp: Float = 0f
+
     val rotationMatrix = FloatArray(9)
     val orientationAngles = FloatArray(3)
 
     override fun onSensorChanged(event: SensorEvent) {
+        if (timestamp != 0f) {
+            val dT = (event.timestamp - timestamp) * NS2S
+
+        }
+        timestamp = event.timestamp.toFloat()
+
         if (event.sensor.type == Sensor.TYPE_ACCELEROMETER) {
             System.arraycopy(event.values, 0, accelerometerReading, 0, accelerometerReading.size)
         } else if (event.sensor.type == Sensor.TYPE_MAGNETIC_FIELD) {
@@ -64,10 +72,14 @@ class DeviceAttitudeHandler(
             "${atan2(rotationMatrix[3], rotationMatrix[4]) / Math.PI * 180}    " +
                     "    ${orientationAngles[0] / Math.PI * 180}   " +
                     "MX${rotationMatrix[3]},MY${rotationMatrix[4]}" +
-                    " AX${rotationMatrix[6]}  AY${rotationMatrix[7]}  AZ${rotationMatrix[8]} "+
-                    "${atan2(rotationMatrix[6], rotationMatrix[8]) / Math.PI * 180}"+"" +
+                    " AX${rotationMatrix[6]}  AY${rotationMatrix[7]}  AZ${rotationMatrix[8]} " +
+                    "${atan2(rotationMatrix[6], rotationMatrix[8]) / Math.PI * 180}" + "" +
                     "${orientationAngles[2] / Math.PI * 180} "
         )
+    }
+
+    companion object {
+        private const val NS2S = 1.0f / 1000000000.0f
     }
 
     override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {}

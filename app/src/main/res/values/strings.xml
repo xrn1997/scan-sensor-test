@@ -2,7 +2,7 @@
     <string name="app_name">SensorTest</string>
     <string name="pressure">气压传感器(hpa)</string>
     <string name="accelerometer">加速度传感器(m/s2)</string>
-    <string name="gyroscope">旋转速率传感器(弧度/s)</string>
+    <string name="gyroscope">陀螺仪传感器(弧度/s)</string>
     <string name="magneticField">磁场传感器(维特斯拉)</string>
     <string name="gravity">重力传感器(m/s2)</string>
     <string name="linear_acceleration">线性加速度传感器(m/s2)</string>
