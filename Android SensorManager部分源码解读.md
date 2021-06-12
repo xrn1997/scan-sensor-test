@@ -328,7 +328,7 @@ $$
 
 ​	为了方便理解，我们首先从二维旋转矩阵开始。如图2，同样的一个点，虽然位置不变，但是在旋转前和旋转后的坐标系中，坐标是不一样的。设旋转前为(x,y)，旋转后为(x',y')。
 
-<div align=center><img src="image/二维旋转坐标系示意图.png" height="400" width="550" /></div>
+<div align=center><img src="https://raw.githubusercontent.com/xrn1997/scan-sensor-test/master/image/%E4%BA%8C%E7%BB%B4%E6%97%8B%E8%BD%AC%E5%9D%90%E6%A0%87%E7%B3%BB%E7%A4%BA%E6%84%8F%E5%9B%BE.png" height="400" width="550" /></div>
 
 <p align="center">图2 二维旋转坐标系示意图 </p>
 
@@ -556,7 +556,7 @@ $$
 
 ​	getOrientation函数的代码比较简单，没有什么复杂的逻辑，只需要将代码与**2.2.2**中给出的公式对比一下即可。这里只解释一下Math.atan2函数的使用，atan2的具体公式如图。
 
-<div align=center><img src=".\image\atan2公式.png"/></div>								
+<div align=center><img src="https://raw.githubusercontent.com/xrn1997/scan-sensor-test/master/image/atan2%E5%85%AC%E5%BC%8F.png"/></div>								
 
 <p align="center">图3 atan2公式</p>
 
