@@ -1,6 +1,6 @@
 # Android SensorManger类部分源码解读
 
-## 1.函数——getRotationMatrix
+## 1.getRotationMatrix
 
 ### 1.1源码
 
@@ -272,7 +272,7 @@ $$
 R( \theta )=
 \begin{bmatrix}
 cos \theta &-sin \theta \\\\ 
-sin \theta &cos \theta
+sin \theta & cos \theta
 \end{bmatrix}
 $$
 
@@ -336,7 +336,7 @@ $$
 $$
 R(- \theta )=
 \begin{bmatrix}
-cos \theta &sin \theta \\\\ 
+ cos \theta &sin \theta \\\\ 
 -sin \theta &cos \theta
 \end{bmatrix}
 $$
@@ -383,15 +383,15 @@ x' \\\\ y' \\\\ z'
 \begin{bmatrix}
 cos \theta_3&0&-sin \theta_3 \\\\
 0&1&0 \\\\
-sin \theta_3&0&cos \theta_3 
+sin \theta_3&0& cos \theta_3 
 \end{bmatrix}
 \begin{bmatrix}
 1&0&0 \\\\
-0&cos \theta_2&sin \theta_2 \\\\
+0& cos \theta_2&sin \theta_2 \\\\
 0&-sin \theta_2&cos \theta_2 
 \end{bmatrix}
 \begin{bmatrix}
-cos \theta_1&sin \theta_1&0 \\\\
+ cos \theta_1&sin \theta_1&0 \\\\
 -sin \theta_1&cos \theta_1&0 \\\\
 0&0&1
 \end{bmatrix}
@@ -432,7 +432,7 @@ R=[H,M,A] ^\mathsf{T}
 $$
 ​	矩阵**I**的计算步骤也是非常好理解的，它的目的就是获得从物体坐标系到世界坐标系的一个简单旋转矩阵。设坐标系原点为O，由于地磁向量在MOA（YOZ）平面，所以该旋转矩阵就是绕H（X）轴的一个旋转矩阵。具体公式在**1.2.2**中介绍过了，就不再赘述了。
 
-## 2.函数——getOrientation
+## 2.getOrientation
 
 ### 2.1源码
 
@@ -533,17 +533,17 @@ $$
 $$
 R_{Z_1X_2Y_3}=
 \begin{bmatrix}
-cos \phi cos \psi -sin \phi sin \psi sin \theta 
+ cos \phi cos \psi -sin \phi sin \psi sin \theta 
 &sin \phi cos \theta 
 &cos \phi sin \psi +sin \phi cos \psi sin \theta 
 \\\\
--sin \phi cos \psi -cos \phi sin \psi sin \theta 
-&cos \phi cos \theta 
+ -sin \phi cos \psi -cos \phi sin \psi sin \theta 
+& cos \phi cos \theta 
 &-sin \phi sin \psi +cos \phi cos \psi sin \theta 
 \\\\
--sin \psi cos \theta
+ -sin \psi cos \theta
 &-sin \theta 
-&cos \psi cos \theta 
+& cos \psi cos \theta 
 \end{bmatrix}
 $$
 ​	上式中，φ为方位角，θ为俯仰角，ψ为倾侧角。
@@ -557,4 +557,274 @@ $$
 <div align=center><img src=".\image\atan2公式.png"/></div>								
 
 <p align="center">图3 atan2公式</p>
+
+## 3.getRotationMatrixFromVector
+
+### 3.1源码
+
+```java
+/** Helper function to convert a rotation vector to a rotation matrix.
+     *  Given a rotation vector (presumably from a ROTATION_VECTOR sensor), returns a
+     *  9  or 16 element rotation matrix in the array R.  R must have length 9 or 16.
+     *  If R.length == 9, the following matrix is returned:
+     * <pre>
+     *   /  R[ 0]   R[ 1]   R[ 2]   \
+     *   |  R[ 3]   R[ 4]   R[ 5]   |
+     *   \  R[ 6]   R[ 7]   R[ 8]   /
+     *</pre>
+     * If R.length == 16, the following matrix is returned:
+     * <pre>
+     *   /  R[ 0]   R[ 1]   R[ 2]   0  \
+     *   |  R[ 4]   R[ 5]   R[ 6]   0  |
+     *   |  R[ 8]   R[ 9]   R[10]   0  |
+     *   \  0       0       0       1  /
+     *</pre>
+     *  @param rotationVector the rotation vector to convert
+     *  @param R an array of floats in which to store the rotation matrix
+     */
+    public static void getRotationMatrixFromVector(float[] R, float[] rotationVector) {
+
+        float q0;
+        float q1 = rotationVector[0];
+        float q2 = rotationVector[1];
+        float q3 = rotationVector[2];
+
+        if (rotationVector.length >= 4) {
+            q0 = rotationVector[3];
+        } else {
+            q0 = 1 - q1 * q1 - q2 * q2 - q3 * q3;
+            q0 = (q0 > 0) ? (float) Math.sqrt(q0) : 0;
+        }
+
+        float sq_q1 = 2 * q1 * q1;
+        float sq_q2 = 2 * q2 * q2;
+        float sq_q3 = 2 * q3 * q3;
+        float q1_q2 = 2 * q1 * q2;
+        float q3_q0 = 2 * q3 * q0;
+        float q1_q3 = 2 * q1 * q3;
+        float q2_q0 = 2 * q2 * q0;
+        float q2_q3 = 2 * q2 * q3;
+        float q1_q0 = 2 * q1 * q0;
+
+        if (R.length == 9) {
+            R[0] = 1 - sq_q2 - sq_q3;
+            R[1] = q1_q2 - q3_q0;
+            R[2] = q1_q3 + q2_q0;
+
+            R[3] = q1_q2 + q3_q0;
+            R[4] = 1 - sq_q1 - sq_q3;
+            R[5] = q2_q3 - q1_q0;
+
+            R[6] = q1_q3 - q2_q0;
+            R[7] = q2_q3 + q1_q0;
+            R[8] = 1 - sq_q1 - sq_q2;
+        } else if (R.length == 16) {
+            R[0] = 1 - sq_q2 - sq_q3;
+            R[1] = q1_q2 - q3_q0;
+            R[2] = q1_q3 + q2_q0;
+            R[3] = 0.0f;
+
+            R[4] = q1_q2 + q3_q0;
+            R[5] = 1 - sq_q1 - sq_q3;
+            R[6] = q2_q3 - q1_q0;
+            R[7] = 0.0f;
+
+            R[8] = q1_q3 - q2_q0;
+            R[9] = q2_q3 + q1_q0;
+            R[10] = 1 - sq_q1 - sq_q2;
+            R[11] = 0.0f;
+
+            R[12] = R[13] = R[14] = 0.0f;
+            R[15] = 1.0f;
+        }
+    }
+```
+
+### 3.2原理
+
+#### 3.2.1四元数
+
+##### 3.2.1.1定义
+
+​	四元数与复数的定义非常类似，唯一的区别就是四元数一共有三个虚部，而复数只有一个，所有的四元数q∈H（H代表四元数的发现者William Rowan）都可以写成下面这种形式：
+$$
+q=a+b \vec{i}+c \vec{j}+d \vec{k},(a,b,c,d∈ \mathbb{R})
+$$
+其中
+$$
+\vec{i^2}= \vec{j^2}=\vec{k^2}=\vec{i}\vec{j}\vec{k}=-1
+$$
+​	与复数类似，因为四元数就是对于基{1,i,j,k}的线性组合，四元数也可以写成向量的形式：
+$$
+q= \begin{bmatrix}
+a \\\\ b \\\\ c \\\\ d
+\end{bmatrix}
+$$
+​	除此之外，我们经常将四元数的实部与虚部分开，并用一个三维的向量来表示虚部，将它表示为标量和向量的有序对形式：
+$$
+q= \begin{bmatrix}
+s,\boldsymbol{v}
+\end{bmatrix}.(\boldsymbol{v}= \begin{bmatrix}
+x \\\\ y \\\\ z
+\end{bmatrix},s,x,y,z \in \mathbb{R}
+)
+$$
+
+​	如果s=0，则我们称q为一个**纯四元数**。
+
+​	共轭四元数：我们定义q的共轭为
+
+##### 3.2.1.2性质
+
+###### 模长
+
+$$
+||q||= \sqrt{a^2+b^2+c^2+d^2} 或||q||= \sqrt{s^2+ \boldsymbol{v} \cdot \boldsymbol{v}}
+(\boldsymbol{v} \cdot \boldsymbol{v}= || \boldsymbol{v}||^2)
+$$
+
+###### 加减法
+
+​	与复数一样，实部与实部相加减，对应的虚部与虚部相加减。
+
+###### 标量与四元数相乘
+
+​	符合交换律，q乘以一个标量s，所有的部分都要乘以s。
+
+###### 四元数乘法
+
+​	不符合交换律，有左乘和右乘的区别，满足结合律和分配律。设两个四元数分别为：
+$$
+q_1=a_1+b_1 \vec{i}+c_1 \vec{j}+d_1 \vec{k},(a_1,b_1,c_1,d_1∈ \mathbb{R}) \\\\
+q_2=a_2+b_2 \vec{i}+c_2 \vec{j}+d_2 \vec{k},(a_2,b_2,c_2,d_2∈ \mathbb{R})
+$$
+​	那么它们的乘积为：
+$$
+\begin{align}
+q_1q_2=&(a_1+b_1 \vec{i}+c_1 \vec{j}+d_1 \vec{k})(a_2+b_2 \vec{i}+c_2 \vec{j}+d_2 \vec{k}) \\\\
+=&a_1a_2+a_1b_2 \vec{i}+a_1c_2 \vec{j}+a_1d_2 \vec{k}+ \\\\
+&b_1a_2 \vec{i}+b_1b_2 \vec{i}^2+b_1c_2 \vec{i}\vec{j}+a_1d_2 \vec{i}\vec{k}+ \\\\
+&c_1a_2 \vec{j}+c_1b_2 \vec{j}\vec{i}+c_1c_2 \vec{j}^2+c_1d_2 \vec{j}\vec{k}+ \\\\
+&d_1a_2 \vec{k}+d_1b_2 \vec{k}\vec{i}+d_1c_2 \vec{k}\vec{j}+d_1d_2 \vec{k}^2
+\end{align}
+$$
+
+​	这样的乘法看起来十分的凌乱，但是我们可以根据
+$$
+\vec{i^2}= \vec{j^2}=\vec{k^2}=\vec{i}\vec{j}\vec{k}=-1
+$$
+​	化简这个定义，可以得到这样一个表格
+
+| X    | 1    | i    | j    | k    |
+| ---- | ---- | ---- | ---- | ---- |
+| 1    | 1    | i    | j    | k    |
+| i    | i    | -1   | k    | -j   |
+| j    | j    | -k   | -1   | i    |
+| k    | k    | j    | -i   | -1   |
+
+​	表格最左列中一个元素右乘以顶行中一个元素的结果就位于这连个元素行列的交叉处。利用这个表格，我们就能进一步化简四元数乘积的结果：
+$$
+\begin{align}
+q_1q_2= 
+& a_1a_2+a_1b_2 \vec{i}+a_1c_2 \vec{j}+a_1d_2 \vec{k}+ \\\\
+& b_1a_2 \vec{i}-b_1b_2+b_1c_2 \vec{k}-a_1d_2 \vec{j}+ \\\\
+& c_1a_2 \vec{j}-c_1b_2 \vec{k}-c_1c_2+c_1d_2 \vec{i}+ \\\\
+& d_1a_2 \vec{k}+d_1b_2 \vec{j}-d_1c_2 \vec{i}-d_1d_2 \\\\
+
+=&(a_1 \textcolor{#FF6A6A}{a_2}-b_1 \textcolor{#00F5FF}{b_2}-c_1  \textcolor{#9ACD32}{c_2}-d_1  \textcolor{#FFA500}{d_2})+ \\\\
+&(b_1 \textcolor{#FF6A6A}{a_2}+a_1 \textcolor{#00F5FF}{b_2}-d_1  \textcolor{#9ACD32}{c_2}+c_1 \textcolor{#FFA500}{d_2})  \vec{i}+ \\\\
+&(c_1 \textcolor{#FF6A6A}{a_2}+d_1 \textcolor{#00F5FF}{b_2}+a_1  \textcolor{#9ACD32}{c_2}-b_1 \textcolor{#FFA500}{d_2})  \vec{j}+ \\\\
+&(d_1 \textcolor{#FF6A6A}{a_2}-c_1 \textcolor{#00F5FF}{b_2}+b_1  \textcolor{#9ACD32}{c_2}+a_1 \textcolor{#FFA500}{d_2})  \vec{k} \\\\
+= & \begin{bmatrix}
+a_1 & -b_1 & -c_1 & -d_1 \\\\
+b_1 &  a_1 & -d_1 &  c_1 \\\\
+c_1 &  d_1 &  a_1 & -b_1 \\\\
+d_1 & -c_1 &  b_1 &  a_1
+\end{bmatrix}
+\begin{bmatrix}
+\textcolor{#FF6A6A}{a_2} \\\\ 
+\textcolor{#00F5FF}{b_2} \\\\ 
+\textcolor{#9ACD32}{c_2} \\\\ 
+\textcolor{#FFA500}{d_2}
+\end{bmatrix}
+\end{align}
+$$
+
+​	这里直接给出：
+$$
+q_2q_1= \begin{bmatrix}
+a_2 & -b_2 & -c_2 & -d_2 \\\\
+b_2 &  a_2 &  d_2 & -c_2 \\\\
+c_2 & -d_2 &  a_2 &  b_2 \\\\
+d_2 &  c_2 & -b_2 &  a_2
+\end{bmatrix}
+\begin{bmatrix}
+\textcolor{#FF6A6A}{a_1} \\\\ 
+\textcolor{#00F5FF}{b_1} \\\\ 
+\textcolor{#9ACD32}{c_1} \\\\ 
+\textcolor{#FFA500}{d_1}
+\end{bmatrix}
+$$
+​	如果令
+$$
+\boldsymbol{v}=\begin{bmatrix}
+b_1 \\\\ c_1 \\\\ d_1
+\end{bmatrix},
+\boldsymbol{u}=\begin{bmatrix}
+b_2 \\\\ c_2 \\\\ d_2
+\end{bmatrix}
+$$
+​	那么
+$$
+\begin{align}
+\boldsymbol{v} \cdot \boldsymbol{u}&=b_1b_2+c_1c_2+d_1d_2 \\\\
+\boldsymbol{v} \times \boldsymbol{u}&=(c_1d_2-d_1c_2) \vec{i}-(b_1d_2-d_1b_2) \vec{j}+(b_1c_2-c_1b_2) \vec{k}
+\end{align}
+$$
+​	则
+$$
+q_1q_2=[a_1a_2- \boldsymbol{v} \cdot \boldsymbol{u},a_1 \boldsymbol{u}+a_2 \boldsymbol{v}+ \boldsymbol{v} \times \boldsymbol{u}]
+$$
+​	这个结果也叫**Graßmann** 积 (Graßmann Product)。
+
+###### 逆运算
+
+​	我们规定 ：
+$$
+qq^{-1}=q^{-1}q=1(q \neq 0)
+$$
+
+#### 3.2.2 罗德里格斯（Rodrigues）旋转公式
+
+​	证明略，这里直接给出定义。3D空间中任意一个向量V沿着单位向量u旋转θ角度之后的向量V‘为：
+$$
+\boldsymbol{v'}=\boldsymbol{v}cos \theta +(1- cos \theta)(\boldsymbol{u} \cdot \boldsymbol{v})\boldsymbol{u}+(\boldsymbol{u} \times \boldsymbol{v})sin \theta
+$$
+​	下面给出使用四元数后的旋转公式定义，证明略。任意向量v沿着以单位向量定义的旋转轴u旋转θ度之后的v’可以使用四元数乘法获得。令
+$$
+\boldsymbol{v}=[0,v],q=[cos( \frac{1}{2} \theta), sin(\frac{1}{2} \theta) \boldsymbol{u}]
+$$
+则：
+$$
+\boldsymbol{v'}=qvq^{-1}
+$$
+
+
+#### 3.2.3
+
+
+
+### 3.3代码解释
+
+## 参考
+
+1.Andriod 源码：[SensorManager.java - Android Code Search](https://cs.android.com/android/platform/superproject/+/master:frameworks/base/core/java/android/hardware/SensorManager.java;l=83?q=SensorManager&sq=)
+
+2.Android 开发者文档 ：[传感器  | Android 开发者  | Android Developers (google.cn)](https://developer.android.google.cn/guide/topics/sensors)
+
+3.计算机图形学 第5章 几何变换 ：[计算机图形学第三版_百度百科 (baidu.com)](https://baike.baidu.com/item/计算机图形学第三版/3328494?fr=aladdin)
+
+4.欧拉角：[Euler angles - Wikipedia](https://en.wikipedia.org/wiki/Euler_angles)
+
+5.四元数与三维旋转：[ Krasjet/quaternion (github.com)](https://github.com/Krasjet/quaternion/blob/master/quaternion.pdf)
 

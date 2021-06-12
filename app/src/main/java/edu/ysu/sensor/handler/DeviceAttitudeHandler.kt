@@ -30,14 +30,14 @@ class DeviceAttitudeHandler(
 
     val rotationMatrix = FloatArray(9)
     val orientationAngles = FloatArray(3)
-    
+
     private val job = Job()
     override fun onSensorChanged(event: SensorEvent) {
-        val scope= CoroutineScope(job)
+        val scope = CoroutineScope(job)
         if (timestamp != 0f) {
             val dT = (event.timestamp - timestamp) * NS2S
             scope.launch {
-                Log.e("数据", dT.toString() )
+                Log.e("数据", dT.toString())
             }
         }
         timestamp = event.timestamp.toFloat()
@@ -77,12 +77,9 @@ class DeviceAttitudeHandler(
         SensorManager.getOrientation(rotationMatrix, orientationAngles)
         Log.e(
             "对比",
-            "${atan2(rotationMatrix[3], rotationMatrix[4]) / Math.PI * 180}    " +
-                    "    ${orientationAngles[0] / Math.PI * 180}   " +
-                    "MX${rotationMatrix[3]},MY${rotationMatrix[4]}" +
-                    " AX${rotationMatrix[6]}  AY${rotationMatrix[7]}  AZ${rotationMatrix[8]} " +
-                    "${atan2(rotationMatrix[6], rotationMatrix[8]) / Math.PI * 180}" + "" +
-                    "${orientationAngles[2] / Math.PI * 180} "
+            "\n ${rotationMatrix[0]}   ${rotationMatrix[1]}    ${rotationMatrix[2]} \n" +
+                    "${rotationMatrix[3]}   ${rotationMatrix[4]}    ${rotationMatrix[5]} \n" +
+                    "${rotationMatrix[6]}   ${rotationMatrix[7]}    ${rotationMatrix[8]} \n"
         )
     }
 
