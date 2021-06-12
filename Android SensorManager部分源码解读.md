@@ -734,23 +734,6 @@ q_1q_2=&a_1a_2+a_1b_2 \vec{i}+a_1c_2 \vec{j}+a_1d_2 \vec{k}+ \\\\
  &(c_1a_2+d_1b_2+a_1c_2-b_1d_2) \vec{j}+ \\\\
  &(d_1a_2-c_1b_2+b_1c_2+a_1d_2) \vec{k} \\\\
 = & \begin{bmatrix}
-a_2 \\\\ b_2 \\\\ c_2 \\\\ d_2
-\end{bmatrix}
-\end{align}
-$$
-
-$$
-\begin{align}
-q_1 q_2 = & a_1 a_2+a_1 b_2 \vec{i}+a_1 c_2 \vec{j}+a_1 d_2 \vec{k}+ \\\\
-& b_1a_2 \vec{i}-b_1b_2+b_1c_2 \vec{k}-a_1d_2 \vec{j}+ \\\\
-& c_1a_2 \vec{j}-c_1b_2 \vec{k}-c_1c_2+c_1d_2 \vec{i}+ \\\\
-& d_1a_2 \vec{k}+d_1b_2 \vec{j}-d_1c_2 \vec{i}-d_1d_2 \\\\
-
-=&(a_1a_2-b_1b_2-c_1c_2-d_1d_2)+ \\\\
-&(b_1a_2+a_1b_2-d_1c_2+c_1d_2) \vec{i}+ \\\\
-&(c_1a_2+d_1b_2+a_1c_2-b_1d_2) \vec{j}+ \\\\
-&(d_1a_2-c_1b_2+b_1c_2+a_1d_2) \vec{k} \\\\
-= & \begin{bmatrix}
 a_1 & -b_1 & -c_1 & -d_1 \\\\
 b_1 &  a_1 & -d_1 &  c_1 \\\\
 c_1 &  d_1 &  a_1 & -b_1 \\\\
@@ -761,7 +744,6 @@ a_2 \\\\ b_2 \\\\ c_2 \\\\ d_2
 \end{bmatrix}
 \end{align}
 $$
-
 ​	这里直接给出：
 $$
 q_2q_1= \begin{bmatrix}
