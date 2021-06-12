@@ -729,6 +729,15 @@ q_1 q_2 = & a_1 a_2+a_1 b_2 \vec{i}+a_1 c_2 \vec{j}+a_1 d_2 \vec{k}+ \\\\
 & b_1a_2 \vec{i}-b_1b_2+b_1c_2 \vec{k}-a_1d_2 \vec{j}+ \\\\
 & c_1a_2 \vec{j}-c_1b_2 \vec{k}-c_1c_2+c_1d_2 \vec{i}+ \\\\
 & d_1a_2 \vec{k}+d_1b_2 \vec{j}-d_1c_2 \vec{i}-d_1d_2 \\\\
+\end{align}
+$$
+
+$$
+\begin{align}
+q_1 q_2 = & a_1 a_2+a_1 b_2 \vec{i}+a_1 c_2 \vec{j}+a_1 d_2 \vec{k}+ \\\\
+& b_1a_2 \vec{i}-b_1b_2+b_1c_2 \vec{k}-a_1d_2 \vec{j}+ \\\\
+& c_1a_2 \vec{j}-c_1b_2 \vec{k}-c_1c_2+c_1d_2 \vec{i}+ \\\\
+& d_1a_2 \vec{k}+d_1b_2 \vec{j}-d_1c_2 \vec{i}-d_1d_2 \\\\
 
 =&(a_1a_2-b_1b_2-c_1c_2-d_1d_2)+ \\\\
 &(b_1a_2+a_1b_2-d_1c_2+c_1d_2) \vec{i}+ \\\\
