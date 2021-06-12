@@ -731,10 +731,10 @@ q_1q_2=
 & c_1a_2 \vec{j}-c_1b_2 \vec{k}-c_1c_2+c_1d_2 \vec{i}+ \\\\
 & d_1a_2 \vec{k}+d_1b_2 \vec{j}-d_1c_2 \vec{i}-d_1d_2 \\\\
 
-=&(a_1 \textcolor{#FF6A6A}{a_2}-b_1 \textcolor{#00F5FF}{b_2}-c_1  \textcolor{#9ACD32}{c_2}-d_1  \textcolor{#FFA500}{d_2})+ \\\\
-&(b_1 \textcolor{#FF6A6A}{a_2}+a_1 \textcolor{#00F5FF}{b_2}-d_1  \textcolor{#9ACD32}{c_2}+c_1 \textcolor{#FFA500}{d_2})  \vec{i}+ \\\\
-&(c_1 \textcolor{#FF6A6A}{a_2}+d_1 \textcolor{#00F5FF}{b_2}+a_1  \textcolor{#9ACD32}{c_2}-b_1 \textcolor{#FFA500}{d_2})  \vec{j}+ \\\\
-&(d_1 \textcolor{#FF6A6A}{a_2}-c_1 \textcolor{#00F5FF}{b_2}+b_1  \textcolor{#9ACD32}{c_2}+a_1 \textcolor{#FFA500}{d_2})  \vec{k} \\\\
+=&(a_1a_2-b_1b_2-c_1c_2-d_1d_2)+ \\\\
+&(b_1a_2+a_1b_2-d_1c_2+c_1d_2) \vec{i}+ \\\\
+&(c_1a_2+d_1b_2+a_1c_2-b_1d_2) \vec{j}+ \\\\
+&(d_1a_2-c_1b_2+b_1c_2+a_1d_2) \vec{k} \\\\
 = & \begin{bmatrix}
 a_1 & -b_1 & -c_1 & -d_1 \\\\
 b_1 &  a_1 & -d_1 &  c_1 \\\\
@@ -742,10 +742,7 @@ c_1 &  d_1 &  a_1 & -b_1 \\\\
 d_1 & -c_1 &  b_1 &  a_1
 \end{bmatrix}
 \begin{bmatrix}
-\textcolor{#FF6A6A}{a_2} \\\\ 
-\textcolor{#00F5FF}{b_2} \\\\ 
-\textcolor{#9ACD32}{c_2} \\\\ 
-\textcolor{#FFA500}{d_2}
+a_2 \\\\ b_2 \\\\ c_2 \\\\ d_2
 \end{bmatrix}
 \end{align}
 $$
@@ -759,10 +756,7 @@ c_2 & -d_2 &  a_2 &  b_2 \\\\
 d_2 &  c_2 & -b_2 &  a_2
 \end{bmatrix}
 \begin{bmatrix}
-\textcolor{#FF6A6A}{a_1} \\\\ 
-\textcolor{#00F5FF}{b_1} \\\\ 
-\textcolor{#9ACD32}{c_1} \\\\ 
-\textcolor{#FFA500}{d_1}
+a_1 \\\\ b_1 \\\\ c_1 \\\\ d_1
 \end{bmatrix}
 $$
 ​	如果令
