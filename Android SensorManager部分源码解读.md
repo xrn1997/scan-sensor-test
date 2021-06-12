@@ -705,13 +705,13 @@ q_2=a_2+b_2 \vec{i}+c_2 \vec{j}+d_2 \vec{k},(a_2,b_2,c_2,d_2∈ \mathbb{R})
 $$
 ​	那么它们的乘积为：
 $$
-\begin{align}
+\begin{aligned}
 q_1q_2=&(a_1+b_1 \vec{i}+c_1 \vec{j}+d_1 \vec{k})(a_2+b_2 \vec{i}+c_2 \vec{j}+d_2 \vec{k}) \\\\
 =&a_1a_2+a_1b_2 \vec{i}+a_1c_2 \vec{j}+a_1d_2 \vec{k}+ \\\\
 &b_1a_2 \vec{i}+b_1b_2 \vec{i}^2+b_1c_2 \vec{i}\vec{j}+a_1d_2 \vec{i}\vec{k}+ \\\\
 &c_1a_2 \vec{j}+c_1b_2 \vec{j}\vec{i}+c_1c_2 \vec{j}^2+c_1d_2 \vec{j}\vec{k}+ \\\\
 &d_1a_2 \vec{k}+d_1b_2 \vec{k}\vec{i}+d_1c_2 \vec{k}\vec{j}+d_1d_2 \vec{k}^2
-\end{align}
+\end{aligned}
 $$
 
 ​	这样的乘法看起来十分的凌乱，但是我们可以根据
@@ -729,7 +729,7 @@ $$
 
 ​	表格最左列中一个元素右乘以顶行中一个元素的结果就位于这连个元素行列的交叉处。利用这个表格，我们就能进一步化简四元数乘积的结果：
 $$
-\begin{align}
+\begin{aligned}
 q_1q_2=&a_1a_2+a_1b_2 \vec{i}+a_1c_2 \vec{j}+a_1d_2 \vec{k}+ \\\\
 & b_1a_2 \vec{i}-b_1b_2+b_1c_2 \vec{k}-a_1d_2 \vec{j}+ \\\\
 & c_1a_2 \vec{j}-c_1b_2 \vec{k}-c_1c_2+c_1d_2 \vec{i}+ \\\\
@@ -747,7 +747,7 @@ d_1 & -c_1 &  b_1 &  a_1
 \begin{bmatrix}
 a_2 \\\\ b_2 \\\\ c_2 \\\\ d_2
 \end{bmatrix}
-\end{align}
+\end{aligned}
 $$
 ​	这里直接给出：
 $$
@@ -772,10 +772,10 @@ b_2 \\\\ c_2 \\\\ d_2
 $$
 ​	那么
 $$
-\begin{align}
+\begin{aligned}
 \boldsymbol{v} \cdot \boldsymbol{u}&=b_1b_2+c_1c_2+d_1d_2 \\\\
 \boldsymbol{v} \times \boldsymbol{u}&=(c_1d_2-d_1c_2) \vec{i}-(b_1d_2-d_1b_2) \vec{j}+(b_1c_2-c_1b_2) \vec{k}
-\end{align}
+\end{aligned}
 $$
 ​	则
 $$
@@ -794,11 +794,11 @@ $$
 
 ​	使用**Graßmann** 积可得：
 $$
-\begin{align}
+\begin{aligned}
 qq^*
 &=[s, \boldsymbol{v}] \cdot [s, - \boldsymbol{v}] \\\\
 &=[s^2+ \boldsymbol{v} \cdot \boldsymbol{v},0]
-\end{align}
+\end{aligned}
 $$
 ​	可以看到，这最终的结果是一个实数，而它正是四元数模长的平方
 $$
@@ -847,7 +847,7 @@ $$
 $$
 v'=
 \begin{bmatrix}
-1-2c^2-2d^2 & 2bc-2ad     & 2ac+2bd \\\\\
+1-2c^2-2d^2 & 2bc-2ad     & 2ac+2bd \\\\
 2bc+2ad     & 1-2b^2-2d^2 & 2cd-2ab \\\\
 2bd-2ac     & 2ab+2cd     & 1-2b^2-2c^2
 \end{bmatrix}v
