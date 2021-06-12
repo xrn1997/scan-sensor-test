@@ -821,7 +821,7 @@ $$
 
 ###### 向量型	
 
-​	证明略，这里直接给出罗德里格斯（Rodrigues）公式的定义。3D空间中任意一个向量V沿着单位向量u旋转θ角度之后的向量V‘为：
+​	证明略，这里直接给出罗德里格斯（Rodrigues）旋转公式的定义。3D空间中任意一个向量V沿着单位向量u旋转θ角度之后的向量V‘为：
 $$
 \boldsymbol{v'}= \boldsymbol{v}cos \theta +(1- cos \theta)( \boldsymbol{u} \cdot \boldsymbol{v}) \boldsymbol{u}+( \boldsymbol{u} \times \boldsymbol{v})sin \theta
 $$
