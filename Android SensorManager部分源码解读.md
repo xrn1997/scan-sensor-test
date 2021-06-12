@@ -650,7 +650,7 @@ $$
 $$
 q=a+b \vec{i}+c \vec{j}+d \vec{k},(a,b,c,d∈ \mathbb{R})
 $$
-其中
+以下q均指四元数,且特指上式。其中
 $$
 \vec{i^2}= \vec{j^2}=\vec{k^2}=\vec{i}\vec{j}\vec{k}=-1
 $$
@@ -672,7 +672,10 @@ $$
 
 ​	如果s=0，则我们称q为一个**纯四元数**。
 
-​	共轭四元数：我们定义q的共轭为
+​	共轭四元数：我们定义q的共轭为（q* 读作 q star）
+$$
+q^*=a-b \vec{i}-c \vec{j}-d \vec{k}
+$$
 
 ##### 3.2.1.2性质
 
@@ -785,29 +788,134 @@ $$
 qq^{-1}=q^{-1}q=1(q \neq 0)
 $$
 
+###### 共轭四元数相乘
+
+​	使用**Graßmann** 积可得：
+$$
+\begin{align}
+qq^*
+&=[s, \boldsymbol{v}] \cdot [s, - \boldsymbol{v}] \\\\
+&=[s^2+ \boldsymbol{v} \cdot \boldsymbol{v},0]
+\end{align}
+$$
+​	可以看到，这最终的结果是一个实数，而它正是四元数模长的平方
+$$
+s^2+x^2+y^2+z^2=||q||^2
+$$
+​	同时可得（证明略）：
+$$
+q^*q=qq^*
+$$
+
+###### 共轭四元数与四元数的逆
+
+​	证明略，公式如下：
+$$
+q^{-1}= \frac {q^*} {||q||^2}
+$$
+​	如果q的模为1，则q为**单位四元数**。
+
 #### 3.2.2 罗德里格斯（Rodrigues）旋转公式
 
 ​	证明略，这里直接给出定义。3D空间中任意一个向量V沿着单位向量u旋转θ角度之后的向量V‘为：
 $$
-\boldsymbol{v'}=\boldsymbol{v}cos \theta +(1- cos \theta)(\boldsymbol{u} \cdot \boldsymbol{v})\boldsymbol{u}+(\boldsymbol{u} \times \boldsymbol{v})sin \theta
+\boldsymbol{v'}= \boldsymbol{v}cos \theta +(1- cos \theta)( \boldsymbol{u} \cdot \boldsymbol{v}) \boldsymbol{u}+( \boldsymbol{u} \times \boldsymbol{v})sin \theta
 $$
 ​	下面给出使用四元数后的旋转公式定义，证明略。任意向量v沿着以单位向量定义的旋转轴u旋转θ度之后的v’可以使用四元数乘法获得。令
 $$
 \boldsymbol{v}=[0,v],q=[cos( \frac{1}{2} \theta), sin(\frac{1}{2} \theta) \boldsymbol{u}]
 $$
-则：
+​	则：
 $$
-\boldsymbol{v'}=qvq^{-1}
+\boldsymbol{v'}=qvq^*=qvq^{-1}
 $$
 
+​	令
+$$
+a=cos( \frac{1}{2} \theta),
+b=sin( \frac{1}{2} \theta)u_x,
+c=sin( \frac{1}{2} \theta)u_y,
+d=sin( \frac{1}{2} \theta)u_z
+$$
+​	那么，它的矩阵形式为：
+$$
+v'=
+\begin{bmatrix}
+1-2c^2-2d^2 & 2bc-2ad     & 2ac+2bd \\\\\
+2bc+2ad     & 1-2b^2-2d^2 & 2cd-2ab \\\\
+2bd-2ac     & 2ab+2cd     & 1-2b^2-2c^2
+\end{bmatrix}v
+$$
 
-#### 3.2.3
+#### 3.2.3旋转矢量传感器
 
+​	旋转矢量传感器获得的三个元素表示如下：
+$$
+x \cdot sin( \frac{1}{2} \theta) \\\\
+y \cdot sin( \frac{1}{2} \theta) \\\\
+z \cdot sin( \frac{1}{2} \theta)
+$$
+​	旋转矢量的大小等于 sin(θ/2)，并且旋转矢量的方向等于旋转轴的方向。实际上，旋转矢量就是单位四元数（cos(θ/2)、x*sin(θ/2)、y*sin(θ/2)、z*sin(θ/2)）的最后三个分量。
 
+​	大部分情况下，旋转矢量传感器获得的数据都是根据陀螺仪计算出来的。
+
+​	这是一段Android开发者文档中利用陀螺仪计算旋转矢量的源码：
+
+```kotlin
+// Create a constant to convert nanoseconds to seconds.
+private val NS2S = 1.0f / 1000000000.0f
+private val deltaRotationVector = FloatArray(4) { 0f }
+private var timestamp: Float = 0f
+
+override fun onSensorChanged(event: SensorEvent?) {
+    // This timestep's delta rotation to be multiplied by the current rotation
+    // after computing it from the gyro sample data.
+    if (timestamp != 0f && event != null) {
+        val dT = (event.timestamp - timestamp) * NS2S
+        // Axis of the rotation sample, not normalized yet.
+        var axisX: Float = event.values[0]
+        var axisY: Float = event.values[1]
+        var axisZ: Float = event.values[2]
+
+        // Calculate the angular speed of the sample
+        val omegaMagnitude: Float = sqrt(axisX * axisX + axisY * axisY + axisZ * axisZ)
+
+        // Normalize the rotation vector if it's big enough to get the axis
+        // (that is, EPSILON should represent your maximum allowable margin of error)
+        if (omegaMagnitude > EPSILON) {
+            axisX /= omegaMagnitude
+            axisY /= omegaMagnitude
+            axisZ /= omegaMagnitude
+        }
+
+        // Integrate around this axis with the angular speed by the timestep
+        // in order to get a delta rotation from this sample over the timestep
+        // We will convert this axis-angle representation of the delta rotation
+        // into a quaternion before turning it into the rotation matrix.
+        val thetaOverTwo: Float = omegaMagnitude * dT / 2.0f
+        val sinThetaOverTwo: Float = sin(thetaOverTwo)
+        val cosThetaOverTwo: Float = cos(thetaOverTwo)
+        deltaRotationVector[0] = sinThetaOverTwo * axisX
+        deltaRotationVector[1] = sinThetaOverTwo * axisY
+        deltaRotationVector[2] = sinThetaOverTwo * axisZ
+        deltaRotationVector[3] = cosThetaOverTwo
+    }
+    timestamp = event?.timestamp?.toFloat() ?: 0f
+    val deltaRotationMatrix = FloatArray(9) { 0f }
+    SensorManager.getRotationMatrixFromVector(deltaRotationMatrix, deltaRotationVector);
+    // User code should concatenate the delta rotation we computed with the current rotation
+    // in order to get the updated rotation.
+    // rotationCurrent = rotationCurrent * deltaRotationMatrix;
+}
+```
+
+结合上面给出的原理公式，这段代码并不难理解，给出这段代码的用途是方便读者理解getRotationMatrixFromVector中使用的旋转矢量是怎么来的。
 
 ### 3.3代码解释
 
-## 参考
+​	这个函数的源码也相当简单，难就难在理解返回值的意义。通过**3.2**中的大量原理公式，可以得出，返回值就是罗德里格斯公式的四元数矩阵形式的旋转矩阵。
+
+## 参考文档
 
 1.Andriod 源码：[SensorManager.java - Android Code Search](https://cs.android.com/android/platform/superproject/+/master:frameworks/base/core/java/android/hardware/SensorManager.java;l=83?q=SensorManager&sq=)
 
@@ -818,4 +926,12 @@ $$
 4.欧拉角：[Euler angles - Wikipedia](https://en.wikipedia.org/wiki/Euler_angles)
 
 5.四元数与三维旋转：[ Krasjet/quaternion (github.com)](https://github.com/Krasjet/quaternion/blob/master/quaternion.pdf)
+
+## 联系方式
+
+本文仅供参考学习使用。如果书写有误或者侵犯了相关作者的权益，请联系我。
+
+QQ：572249217。
+
+EMAIL：572249217@qq.com
 
