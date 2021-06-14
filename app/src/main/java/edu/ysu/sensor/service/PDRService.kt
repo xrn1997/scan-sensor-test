@@ -3,15 +3,13 @@ package edu.ysu.sensor.service
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
-import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.hardware.SensorManager
 import android.os.Build
-import android.os.IBinder
-import android.util.Log
 import androidx.core.app.NotificationCompat
+import androidx.lifecycle.LifecycleService
 import edu.ysu.sensor.MainActivity
 import edu.ysu.sensor.R
 import edu.ysu.sensor.event.NewStepEvent
@@ -24,7 +22,7 @@ import org.greenrobot.eventbus.EventBus
  * @author xrn1997
  * @date 2021/6/2
  */
-class PDRService : Service() {
+class PDRService : LifecycleService() {
 
     private lateinit var mSensorManager: SensorManager
 
@@ -36,11 +34,11 @@ class PDRService : Service() {
         mSensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
         deviceAttitudeHandler = DeviceAttitudeHandler(mSensorManager)
         stepDetectionHandler = StepDetectionHandler(mSensorManager)
+        lifecycle.addObserver(deviceAttitudeHandler)
+        lifecycle.addObserver(stepDetectionHandler)
         initListener()
         initNotification()
     }
-
-
     private fun initListener() {
         stepDetectionHandler.setStepListener(object : StepDetectionHandler.StepDetectionListener {
             override fun newStep(stepSize: Float) {
@@ -74,20 +72,4 @@ class PDRService : Service() {
         startForeground(3, notification)
     }
 
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        stepDetectionHandler.start()
-        deviceAttitudeHandler.start()
-        return super.onStartCommand(intent, flags, startId)
-    }
-
-
-    override fun onDestroy() {
-        super.onDestroy()
-        stepDetectionHandler.stop()
-        deviceAttitudeHandler.stop()
-    }
-
-    override fun onBind(intent: Intent): IBinder? {
-        return null
-    }
 }

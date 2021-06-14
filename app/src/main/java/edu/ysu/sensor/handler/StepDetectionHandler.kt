@@ -4,7 +4,9 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
-import android.util.Log
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.OnLifecycleEvent
 
 
 /**
@@ -14,7 +16,7 @@ import android.util.Log
  */
 class StepDetectionHandler(
     private var sensorManager: SensorManager
-) : SensorEventListener {
+) : SensorEventListener, LifecycleObserver {
 
     private var mStepDetectionListener: StepDetectionListener? = null
 
@@ -43,10 +45,11 @@ class StepDetectionHandler(
         mStepDetectionListener = listener
     }
 
+    @OnLifecycleEvent(Lifecycle.Event.ON_START)
     fun start() {
         sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL)
     }
-
+    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
     fun stop() {
         sensorManager.unregisterListener(this)
     }

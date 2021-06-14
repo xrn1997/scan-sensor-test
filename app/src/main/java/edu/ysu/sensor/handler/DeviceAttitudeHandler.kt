@@ -5,10 +5,12 @@ import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.util.Log
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.OnLifecycleEvent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import kotlin.math.atan2
 
 
 /**
@@ -18,7 +20,7 @@ import kotlin.math.atan2
  */
 class DeviceAttitudeHandler(
     var sensorManager: SensorManager
-) : SensorEventListener {
+) : SensorEventListener, LifecycleObserver {
 
     private var magneticField: Sensor? = null
     private var accelerometer: Sensor? = null
@@ -50,6 +52,7 @@ class DeviceAttitudeHandler(
         updateOrientationAngles()
     }
 
+    @OnLifecycleEvent(Lifecycle.Event.ON_START)
     fun start() {
         // 为加速度传感器注册监听器
         sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL)
@@ -57,6 +60,7 @@ class DeviceAttitudeHandler(
         sensorManager.registerListener(this, magneticField, SensorManager.SENSOR_DELAY_NORMAL)
     }
 
+    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
     fun stop() {
         job.cancel()
         sensorManager.unregisterListener(this)
