@@ -43,10 +43,11 @@ class SensorService : Service(), SensorEventListener {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-       // registerSensorListener(SensorManager.SENSOR_DELAY_GAME)
+        // registerSensorListener(SensorManager.SENSOR_DELAY_GAME)
         registerSensorListener(SensorManager.SENSOR_DELAY_UI)
         return super.onStartCommand(intent, flags, startId)
     }
+
     /**
      * 初始化通知
      */
@@ -68,6 +69,7 @@ class SensorService : Service(), SensorEventListener {
             .build()
         startForeground(2, notification)
     }
+
     override fun onDestroy() {
         super.onDestroy()
         mSensorManager.unregisterListener(this)
@@ -89,7 +91,7 @@ class SensorService : Service(), SensorEventListener {
      * 加速度传感器 = 重力传感器+线性加速度传感器。
      * @param sensorDelayType 数据更新模式
      */
-    private fun registerSensorListener(sensorDelayType:Int) {
+    private fun registerSensorListener(sensorDelayType: Int) {
         //为气压传感器注册监听器
         mSensorManager.registerListener(this, pressure, sensorDelayType)
         // 为加速度传感器注册监听器
@@ -118,7 +120,14 @@ class SensorService : Service(), SensorEventListener {
         pressure = mSensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE)
         accelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
         gyroscope = mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE)
-        magneticField = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)
+        /**
+         * 校准过的磁力计
+         */
+        // magneticField = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)
+        /**
+         * 未校准过的磁力计
+         */
+        magneticField = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD_UNCALIBRATED)
         gravity = mSensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY)
         linearAcceleration = mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION)
         light = mSensorManager.getDefaultSensor(Sensor.TYPE_LIGHT)

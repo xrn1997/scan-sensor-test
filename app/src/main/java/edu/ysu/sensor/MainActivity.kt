@@ -3,6 +3,7 @@ package edu.ysu.sensor
 import android.content.Intent
 import android.hardware.Sensor
 import android.hardware.SensorEvent
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -36,7 +37,11 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, SensorService::class.java)
             if (binding.button.text == resources.getText(R.string.start_scan_sensor_data)) {
                 binding.button.text = resources.getText(R.string.stop_scan_sensor_data)
-                startService(intent)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    startForegroundService(intent);
+                } else {
+                    startService(intent);
+                }
             } else if (binding.button.text == resources.getText(R.string.stop_scan_sensor_data)) {
                 binding.button.text = resources.getText(R.string.start_scan_sensor_data)
                 stopService(intent)
@@ -72,6 +77,11 @@ class MainActivity : AppCompatActivity() {
                 binding.textView2.text = ("X${values[0]},Y${values[1]},Z${values[2]}")
             Sensor.TYPE_MAGNETIC_FIELD ->
                 binding.textView3.text = ("X${values[0]},Y${values[1]},Z${values[2]}")
+            Sensor.TYPE_MAGNETIC_FIELD_UNCALIBRATED ->{
+                binding.textView03.text=(resources.getText(R.string.magneticField).toString() +"未经校准")
+                binding.textView3.text = ("X${values[0]},Y${values[1]},Z${values[2]}")
+            }
+
             Sensor.TYPE_GRAVITY -> {
                 Log.e(
                     "重力向量", "X${values[0]}  Y${values[1]}  Z${values[2]}" +
