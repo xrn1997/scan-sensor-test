@@ -351,7 +351,7 @@ $$
 z轴旋转
 \begin{cases}
 x'=xcos \theta +ysin \theta \\\\
-y'=xsin \theta -ycos \theta \\\\
+y'=-xsin \theta +ycos \theta \\\\
 z'=z
 \end{cases}
 $$
@@ -361,7 +361,7 @@ $$
 x轴旋转
 \begin{cases}
 y'=ycos \theta +zsin \theta \\\\
-z'=ysin \theta -zcos \theta \\\\
+z'=-ysin \theta +zcos \theta \\\\
 x'=x
 \end{cases}
 $$
@@ -370,7 +370,7 @@ $$
 y轴旋转
 \begin{cases}
 z'=zcos \theta +xsin \theta \\\\
-x'=zsin \theta -xcos \theta \\\\
+x'=-zsin \theta +xcos \theta \\\\
 y'=y
 \end{cases}
 $$
