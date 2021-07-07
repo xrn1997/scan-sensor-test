@@ -554,7 +554,7 @@ $$
 
 ### 2.3代码解释
 
-​	getOrientation函数的代码比较简单，没有什么复杂的逻辑，只需要将代码与**2.2.2**中给出的公式对比一下即可。这里只解释一下Math.atan2函数的使用，atan2的具体公式如图。
+​	getOrientation函数的代码比较简单，没有什么复杂的逻辑，只需要将代码与**2.2.3**中给出的公式对比一下即可。这里只解释一下Math.atan2函数的使用，atan2的具体公式如图。
 
 <div align=center><img src="https://raw.githubusercontent.com/xrn1997/scan-sensor-test/master/image/atan2%E5%85%AC%E5%BC%8F.png"/></div>								
 
