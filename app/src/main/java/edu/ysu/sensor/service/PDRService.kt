@@ -46,7 +46,6 @@ class PDRService : LifecycleService() {
                     PDRUtil.computeNextStep(stepSize, deviceAttitudeHandler.orientationAngles[0])
                 EventBus.getDefault().post(NewStepEvent(stepDetectionHandler.step.toString(), newLocation))
             }
-
         })
     }
 

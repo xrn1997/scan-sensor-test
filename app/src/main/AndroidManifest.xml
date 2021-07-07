@@ -25,6 +25,10 @@
             android:name="edu.ysu.sensor.service.PDRService"
             android:enabled="true"
             android:exported="false" />
+        <service
+            android:name="edu.ysu.sensor.service.AccelerometerService"
+            android:enabled="true"
+            android:exported="false" />
 
     </application>
 

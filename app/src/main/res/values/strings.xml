@@ -11,9 +11,11 @@
     <string name="rotation_vector">旋转矢量传感器(无单位)</string>
     <string name="proximity">近距离传感器(cm)</string>
     <string name="light">光线传感器(lx)</string>
-    <string name="start_scan_sensor_data">开始扫描传感器</string>
-    <string name="stop_scan_sensor_data">停止扫描传感器</string>
+    <string name="start_scan_sensor_data">开始扫描</string>
+    <string name="stop_scan_sensor_data">停止扫描</string>
     <string name="start_pdr">开始PDR</string>
     <string name="stop_pdr">停止PDR</string>
     <string name="pdr_data">PDR数据</string>
+    <string name="start_collect">开始采集</string>
+    <string name="stop_collect">停止采集</string>
 </resources>

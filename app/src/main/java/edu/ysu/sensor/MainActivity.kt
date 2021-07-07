@@ -6,18 +6,16 @@ import android.hardware.SensorEvent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import edu.ysu.sensor.databinding.ActivityMainBinding
 import edu.ysu.sensor.entity.Location
 import edu.ysu.sensor.event.NewStepEvent
+import edu.ysu.sensor.service.AccelerometerService
 import edu.ysu.sensor.service.PDRService
 import edu.ysu.sensor.service.SensorService
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import kotlin.math.pow
-import kotlin.math.sqrt
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -37,11 +35,7 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, SensorService::class.java)
             if (binding.button.text == resources.getText(R.string.start_scan_sensor_data)) {
                 binding.button.text = resources.getText(R.string.stop_scan_sensor_data)
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    startForegroundService(intent);
-                } else {
-                    startService(intent);
-                }
+                startService(intent)
             } else if (binding.button.text == resources.getText(R.string.stop_scan_sensor_data)) {
                 binding.button.text = resources.getText(R.string.start_scan_sensor_data)
                 stopService(intent)
@@ -57,6 +51,16 @@ class MainActivity : AppCompatActivity() {
                 stopService(intent)
             }
         }
+        binding.button3.setOnClickListener {
+            val intent = Intent(this, AccelerometerService::class.java)
+            if (binding.button3.text == resources.getText(R.string.start_collect)) {
+                binding.button3.text = resources.getText(R.string.stop_collect)
+                startService(intent)
+            } else if (binding.button3.text == resources.getText(R.string.stop_collect)) {
+                binding.button3.text = resources.getText(R.string.start_collect)
+                stopService(intent)
+            }
+        }
     }
 
     override fun onDestroy() {
@@ -68,8 +72,10 @@ class MainActivity : AppCompatActivity() {
      * 更新UI
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
+    @Suppress("unused")
     fun onSensorChanged(event: SensorEvent) {
         val values = event.values
+
         when (event.sensor.type) {
             Sensor.TYPE_ACCELEROMETER ->
                 binding.textView1.text = ("X${values[0]},Y${values[1]},Z${values[2]}")
@@ -77,21 +83,12 @@ class MainActivity : AppCompatActivity() {
                 binding.textView2.text = ("X${values[0]},Y${values[1]},Z${values[2]}")
             Sensor.TYPE_MAGNETIC_FIELD ->
                 binding.textView3.text = ("X${values[0]},Y${values[1]},Z${values[2]}")
-            Sensor.TYPE_MAGNETIC_FIELD_UNCALIBRATED ->{
-                binding.textView03.text=(resources.getText(R.string.magneticField).toString() +"未经校准")
+            Sensor.TYPE_MAGNETIC_FIELD_UNCALIBRATED -> {
+                binding.textView03.text =
+                    (resources.getText(R.string.magneticField).toString() + "未经校准")
                 binding.textView3.text = ("X${values[0]},Y${values[1]},Z${values[2]}")
             }
-
             Sensor.TYPE_GRAVITY -> {
-                Log.e(
-                    "重力向量", "X${values[0]}  Y${values[1]}  Z${values[2]}" +
-                            " ${
-                                sqrt(
-                                    values[0].toDouble().pow(2.0) + values[1].toDouble()
-                                        .pow(2.0) + values[2].toDouble().pow(2.0)
-                                )
-                            }"
-                )
                 binding.textView4.text = ("X${values[0]},Y${values[1]},Z${values[2]}")
             }
             Sensor.TYPE_LINEAR_ACCELERATION ->
@@ -112,6 +109,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
+    @Suppress("unused")
     fun pdrStepEvent(newStepEvent: NewStepEvent) {
         val newLocation: Location = newStepEvent.data
         binding.textView12.text = (

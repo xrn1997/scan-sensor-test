@@ -7,183 +7,208 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="8"
-        android:orientation="vertical">
+        android:layout_weight="8">
 
-        <TextView
-            android:id="@+id/text_view_01"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/accelerometer" />
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/text_view_1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp" />
+            <TextView
+                android:id="@+id/text_view_01"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/accelerometer" />
 
-        <TextView
-            android:id="@+id/text_view_02"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/gyroscope" />
+            <TextView
+                android:id="@+id/text_view_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp" />
 
-        <TextView
-            android:id="@+id/text_view_2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp" />
+            <TextView
+                android:id="@+id/text_view_02"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/gyroscope" />
 
-        <TextView
-            android:id="@+id/text_view_03"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/magneticField" />
+            <TextView
+                android:id="@+id/text_view_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp" />
 
-        <TextView
-            android:id="@+id/text_view_3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp" />
+            <TextView
+                android:id="@+id/text_view_03"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/magneticField" />
 
-        <TextView
-            android:id="@+id/text_view_04"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/gravity" />
+            <TextView
+                android:id="@+id/text_view_3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp" />
 
-        <TextView
-            android:id="@+id/text_view_4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp" />
+            <TextView
+                android:id="@+id/text_view_04"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/gravity" />
 
-        <TextView
-            android:id="@+id/text_view_05"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/linear_acceleration" />
+            <TextView
+                android:id="@+id/text_view_4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp" />
 
-        <TextView
-            android:id="@+id/text_view_5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp" />
+            <TextView
+                android:id="@+id/text_view_05"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/linear_acceleration" />
 
-        <TextView
-            android:id="@+id/text_view_06"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/pressure" />
+            <TextView
+                android:id="@+id/text_view_5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp" />
 
-        <TextView
-            android:id="@+id/text_view_6"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp" />
+            <TextView
+                android:id="@+id/text_view_06"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/pressure" />
 
-        <TextView
-            android:id="@+id/text_view_07"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/light" />
+            <TextView
+                android:id="@+id/text_view_6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp" />
 
-        <TextView
-            android:id="@+id/text_view_7"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp" />
+            <TextView
+                android:id="@+id/text_view_07"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/light" />
 
-        <TextView
-            android:id="@+id/text_view_08"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/proximity" />
+            <TextView
+                android:id="@+id/text_view_7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp" />
 
-        <TextView
-            android:id="@+id/text_view_8"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp" />
+            <TextView
+                android:id="@+id/text_view_08"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/proximity" />
 
-        <TextView
-            android:id="@+id/text_view_09"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/rotation_vector" />
+            <TextView
+                android:id="@+id/text_view_8"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp" />
 
-        <TextView
-            android:id="@+id/text_view_9"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp" />
+            <TextView
+                android:id="@+id/text_view_09"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/rotation_vector" />
 
-        <TextView
-            android:id="@+id/text_view_010"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/relative_humidity" />
+            <TextView
+                android:id="@+id/text_view_9"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp" />
 
-        <TextView
-            android:id="@+id/text_view_10"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp" />
+            <TextView
+                android:id="@+id/text_view_010"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/relative_humidity" />
 
-        <TextView
-            android:id="@+id/text_view_011"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/ambient_temperature" />
+            <TextView
+                android:id="@+id/text_view_10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp" />
 
-        <TextView
-            android:id="@+id/text_view_11"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp" />
-        <TextView
-            android:id="@+id/text_view_012"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/pdr_data" />
+            <TextView
+                android:id="@+id/text_view_011"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/ambient_temperature" />
 
-        <TextView
-            android:id="@+id/text_view_12"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp" />
-    </LinearLayout>
+            <TextView
+                android:id="@+id/text_view_11"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp" />
+
+            <TextView
+                android:id="@+id/text_view_012"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/pdr_data" />
+
+            <TextView
+                android:id="@+id/text_view_12"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp" />
+        </LinearLayout>
+    </ScrollView>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="2"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:orientation="horizontal">
 
         <Button
             android:id="@+id/button"
             style="?android:attr/buttonStyle"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="10dp"
-            android:padding="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_weight="1"
             android:background="@drawable/btn_selector"
+            android:padding="10dp"
             android:text="@string/start_scan_sensor_data"
             android:textColor="@color/color_white" />
+
         <Button
             android:id="@+id/button_2"
             style="?android:attr/buttonStyle"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="10dp"
-            android:padding="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_weight="1"
             android:background="@drawable/btn_selector"
+            android:padding="10dp"
             android:text="@string/start_pdr"
+            android:visibility="gone"
+            android:textColor="@color/color_white" />
+
+        <Button
+            android:id="@+id/button_3"
+            style="?android:attr/buttonStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/btn_selector"
+            android:padding="10dp"
+            android:text="@string/start_collect"
             android:textColor="@color/color_white" />
     </LinearLayout>
 
