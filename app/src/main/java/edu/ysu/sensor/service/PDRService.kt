@@ -1,5 +1,6 @@
 package edu.ysu.sensor.service
 
+import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -52,6 +53,7 @@ class PDRService : LifecycleService() {
     /**
      * 初始化通知
      */
+    @SuppressLint("UnspecifiedImmutableFlag")
     private fun initNotification() {
         val notificationManager =
             getSystemService(NOTIFICATION_SERVICE) as NotificationManager
@@ -60,7 +62,11 @@ class PDRService : LifecycleService() {
             notificationManager.createNotificationChannel(channel)
         }
         val intent = Intent(this, MainActivity::class.java)
-        val pi = PendingIntent.getActivity(this, 0, intent, 0)
+        val pi = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+        } else {
+            PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        }
         val notification = NotificationCompat.Builder(this, "传感器服务")
             .setContentTitle("正在扫描传感器")
             .setContentText("获得传感器数据")

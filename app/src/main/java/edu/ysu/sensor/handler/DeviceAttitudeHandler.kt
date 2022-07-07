@@ -5,9 +5,9 @@ import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.util.Log
-import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.OnLifecycleEvent
+import androidx.lifecycle.LifecycleOwner
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -20,7 +20,7 @@ import kotlinx.coroutines.launch
  */
 class DeviceAttitudeHandler(
     private var sensorManager: SensorManager
-) : SensorEventListener, LifecycleObserver {
+) : DefaultLifecycleObserver, SensorEventListener, LifecycleObserver {
 
     private var magneticField: Sensor? = null
     private var accelerometer: Sensor? = null
@@ -125,9 +125,8 @@ class DeviceAttitudeHandler(
         }
     }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_START)
-    @Suppress("unused")
-    fun start() {
+    override fun onStart(owner: LifecycleOwner) {
+        super.onStart(owner)
         // 为加速度传感器注册监听器
         sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL)
         // 为磁场传感器注册监听器
@@ -140,9 +139,8 @@ class DeviceAttitudeHandler(
         sensorManager.registerListener(this, gyroscope, SensorManager.SENSOR_DELAY_NORMAL)
     }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
-    @Suppress("unused")
-    fun stop() {
+    override fun onStop(owner: LifecycleOwner) {
+        super.onStop(owner)
         job.cancel()
         sensorManager.unregisterListener(this)
     }

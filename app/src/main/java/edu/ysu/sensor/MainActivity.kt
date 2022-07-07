@@ -3,10 +3,9 @@ package edu.ysu.sensor
 import android.content.Intent
 import android.hardware.Sensor
 import android.hardware.SensorEvent
-import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import edu.ysu.sensor.databinding.ActivityMainBinding
 import edu.ysu.sensor.entity.Location
 import edu.ysu.sensor.event.NewStepEvent
@@ -31,13 +30,13 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun initListener() {
-        binding.button.setOnClickListener {
+        binding.button0.setOnClickListener {
             val intent = Intent(this, SensorService::class.java)
-            if (binding.button.text == resources.getText(R.string.start_scan_sensor_data)) {
-                binding.button.text = resources.getText(R.string.stop_scan_sensor_data)
+            if (binding.button0.text == resources.getText(R.string.start_scan_sensor_data)) {
+                binding.button0.text = resources.getText(R.string.stop_scan_sensor_data)
                 startService(intent)
-            } else if (binding.button.text == resources.getText(R.string.stop_scan_sensor_data)) {
-                binding.button.text = resources.getText(R.string.start_scan_sensor_data)
+            } else if (binding.button0.text == resources.getText(R.string.stop_scan_sensor_data)) {
+                binding.button0.text = resources.getText(R.string.start_scan_sensor_data)
                 stopService(intent)
             }
         }

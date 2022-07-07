@@ -19,7 +19,6 @@ import edu.ysu.sensor.MainActivity
 import edu.ysu.sensor.MyApplication
 import edu.ysu.sensor.R
 import java.io.*
-import java.lang.Exception
 
 /**
  * @author xrn1997

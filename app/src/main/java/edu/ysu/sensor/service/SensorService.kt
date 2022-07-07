@@ -1,5 +1,6 @@
 package edu.ysu.sensor.service
 
+import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -37,7 +38,6 @@ class SensorService : Service(), SensorEventListener {
     private var ambientTemperature: Sensor? = null
 
 
-
     override fun onCreate() {
         super.onCreate()
         mSensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
@@ -53,6 +53,7 @@ class SensorService : Service(), SensorEventListener {
     /**
      * 初始化通知
      */
+    @SuppressLint("UnspecifiedImmutableFlag")
     private fun initNotification() {
         val notificationManager =
             getSystemService(NOTIFICATION_SERVICE) as NotificationManager
@@ -61,7 +62,11 @@ class SensorService : Service(), SensorEventListener {
             notificationManager.createNotificationChannel(channel)
         }
         val intent = Intent(this, MainActivity::class.java)
-        val pi = PendingIntent.getActivity(this, 0, intent, 0)
+        val pi = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+        } else {
+            PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        }
         val notification = NotificationCompat.Builder(this, "传感器服务")
             .setContentTitle("正在扫描传感器")
             .setContentText("获得传感器数据")
@@ -124,11 +129,11 @@ class SensorService : Service(), SensorEventListener {
         /**
          * 校准过的磁力计
          */
-        // magneticField = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)
+        magneticField = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)
         /**
          * 未校准过的磁力计
          */
-        magneticField = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD_UNCALIBRATED)
+//        magneticField = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD_UNCALIBRATED)
         gravity = mSensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY)
         linearAcceleration = mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION)
         light = mSensorManager.getDefaultSensor(Sensor.TYPE_LIGHT)
