@@ -1,9 +1,11 @@
 package edu.ysu.sensor
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import edu.ysu.sensor.databinding.ActivityMainBinding
@@ -71,6 +73,7 @@ class MainActivity : AppCompatActivity() {
      * 更新UI
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
+    @SuppressLint("SetTextI18n")
     @Suppress("unused")
     fun onSensorChanged(event: SensorEvent) {
         val values = event.values
@@ -107,10 +110,15 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     @Subscribe(threadMode = ThreadMode.MAIN)
     @Suppress("unused")
     fun pdrStepEvent(newStepEvent: NewStepEvent) {
         val newLocation: Location = newStepEvent.data
+        Log.e(
+            "测试", "最新位置:(${newLocation.x}，${newLocation.y}) \n" +
+                    "步数: ${newStepEvent.msg} \n"
+        )
         binding.textView12.text = (
                 "最新位置:(${newLocation.x}，${newLocation.y}) \n" +
                         "步数: ${newStepEvent.msg} \n")

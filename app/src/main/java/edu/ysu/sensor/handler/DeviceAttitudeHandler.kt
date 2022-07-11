@@ -181,12 +181,12 @@ class DeviceAttitudeHandler(
 //                "${rotationMatrixFromVector[6]}   ${rotationMatrixFromVector[7]}    ${rotationMatrixFromVector[8]} \n"
 //        )
         SensorManager.getOrientation(rotationMatrixFromVector, orientationAnglesFromVector)
-        Log.e(
-            "对比", "通过getRotationMatrix计算的旋转矩阵欧拉角：" +
-                    "${orientationAngles[0] * 180 / Math.PI}   ${orientationAngles[1] * 180 / Math.PI}  ${orientationAngles[2] * 180 / Math.PI}  \n" +
-                    "通过getRotationMatrixFromVector计算的旋转矩阵欧拉角：" +
-                    "${orientationAnglesFromVector[0] * 180 / Math.PI}   ${orientationAnglesFromVector[1] * 180 / Math.PI}  ${orientationAnglesFromVector[2] * 180 / Math.PI} \n"
-        )
+//        Log.e(
+//            "对比", "通过getRotationMatrix计算的旋转矩阵欧拉角：" +
+//                    "${orientationAngles[0] * 180 / Math.PI}   ${orientationAngles[1] * 180 / Math.PI}  ${orientationAngles[2] * 180 / Math.PI}  \n" +
+//                    "通过getRotationMatrixFromVector计算的旋转矩阵欧拉角：" +
+//                    "${orientationAnglesFromVector[0] * 180 / Math.PI}   ${orientationAnglesFromVector[1] * 180 / Math.PI}  ${orientationAnglesFromVector[2] * 180 / Math.PI} \n"
+//        )
     }
 
     @Suppress("unused")
