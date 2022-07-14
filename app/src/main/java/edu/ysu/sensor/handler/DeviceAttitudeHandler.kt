@@ -24,28 +24,20 @@ class DeviceAttitudeHandler(
 
     private var magneticField: Sensor? = null
     private var accelerometer: Sensor? = null
-    private var gravity: Sensor? = null
     private var rotationVector: Sensor? = null
-    private var gyroscope: Sensor? = null
 
     private val accelerometerReading = FloatArray(3)
     private val magnetometerReading = FloatArray(3)
     private val rotationVectorReading = FloatArray(3)
 
     /**
-     * 重力计读数
+     * 重力计和磁力计计算出的旋转矩阵
      */
-    private val gravityReading = FloatArray(3)
-
-    /**
-     * 通过低通滤波计算出的重力
-     */
-    private val gravityCalculating = FloatArray(3)
-
-    //private var timestamp: Float = 0f
-
     private val rotationMatrix = FloatArray(9)
 
+    /**
+     * 旋转矢量（重力计、磁力计、陀螺仪）计算出的旋转矩阵
+     */
     private val rotationMatrixFromVector = FloatArray(9)
 
     /**
@@ -58,23 +50,10 @@ class DeviceAttitudeHandler(
      */
     private val orientationAnglesFromVector = FloatArray(3)
 
-    /**
-     * 根据陀螺仪得到的角度
-     */
-    private val orientationAnglesFromGyroscope = FloatArray(3)
-
     private val job = Job()
 
-    private val alpha = 0.8f
     override fun onSensorChanged(event: SensorEvent) {
         val scope = CoroutineScope(job)
-//        if (timestamp != 0f) {
-//            val dT = (event.timestamp - timestamp) * NS2S
-//            scope.launch {
-//                Log.e("数据", dT.toString())
-//            }
-//        }
-//        timestamp = event.timestamp.toFloat()
 
         when (event.sensor.type) {
             Sensor.TYPE_ACCELEROMETER -> {
@@ -86,20 +65,9 @@ class DeviceAttitudeHandler(
                     accelerometerReading.size
                 )
 
-                // Isolate the force of gravity with the low-pass filter.
-                gravityCalculating[0] =
-                    alpha * gravityCalculating[0] + (1 - alpha) * event.values[0]
-                gravityCalculating[1] =
-                    alpha * gravityCalculating[1] + (1 - alpha) * event.values[1]
-                gravityCalculating[2] =
-                    alpha * gravityCalculating[2] + (1 - alpha) * event.values[2]
-
             }
             Sensor.TYPE_MAGNETIC_FIELD -> {
                 System.arraycopy(event.values, 0, magnetometerReading, 0, magnetometerReading.size)
-            }
-            Sensor.TYPE_GRAVITY -> {
-                System.arraycopy(event.values, 0, gravityReading, 0, gravityReading.size)
             }
             Sensor.TYPE_ROTATION_VECTOR -> {
                 System.arraycopy(
@@ -108,15 +76,6 @@ class DeviceAttitudeHandler(
                     rotationVectorReading,
                     0,
                     rotationVectorReading.size
-                )
-            }
-            Sensor.TYPE_GYROSCOPE -> {
-                System.arraycopy(
-                    event.values,
-                    0,
-                    orientationAnglesFromGyroscope,
-                    0,
-                    orientationAnglesFromGyroscope.size
                 )
             }
         }
@@ -131,12 +90,8 @@ class DeviceAttitudeHandler(
         sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL)
         // 为磁场传感器注册监听器
         sensorManager.registerListener(this, magneticField, SensorManager.SENSOR_DELAY_NORMAL)
-        //为重力计注册监听器
-        sensorManager.registerListener(this, gravity, SensorManager.SENSOR_DELAY_NORMAL)
         //旋转矢量传感器注册监听器
         sensorManager.registerListener(this, rotationVector, SensorManager.SENSOR_DELAY_NORMAL)
-        //为陀螺仪传感器注册监听器
-        sensorManager.registerListener(this, gyroscope, SensorManager.SENSOR_DELAY_NORMAL)
     }
 
     override fun onStop(owner: LifecycleOwner) {
@@ -148,9 +103,7 @@ class DeviceAttitudeHandler(
     init {
         accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
         magneticField = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)
-        gravity = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY)
         rotationVector = sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR)
-        gyroscope = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE)
     }
 
     private fun updateOrientationAngles() {
@@ -161,27 +114,31 @@ class DeviceAttitudeHandler(
             magnetometerReading
         )
         SensorManager.getOrientation(rotationMatrix, orientationAngles)
-//        Log.e(
+
+//        Log.d(
 //            "对比",
 //            "getRotationMatrix计算的旋转矩阵：" +
 //                    " ${rotationMatrix[0]}   ${rotationMatrix[1]}    ${rotationMatrix[2]} \n" +
 //                    "${rotationMatrix[3]}   ${rotationMatrix[4]}    ${rotationMatrix[5]} \n" +
 //                    "${rotationMatrix[6]}   ${rotationMatrix[7]}    ${rotationMatrix[8]} \n"
 //        )
-//        Log.e(
+//        Log.d(
 //            "对比", "重力计读数：" +
 //                    "${gravityReading[0]}   ${gravityReading[1]}  ${gravityReading[2]} " +
 //                    "加速度计使用低通滤波过滤出来的重力：" +
 //                    "${gravityCalculating[0]}   ${gravityCalculating[1]}  ${gravityCalculating[2]}"
 //        )
-        SensorManager.getRotationMatrixFromVector(rotationMatrixFromVector, rotationVectorReading)
-//        Log.e("对比", "通过陀螺仪旋转矢量获得的旋转矩阵：" +
+        SensorManager.getRotationMatrixFromVector(
+            rotationMatrixFromVector,
+            rotationVectorReading
+        )
+//        Log.d("对比", "通过陀螺仪旋转矢量获得的旋转矩阵：" +
 //                " ${rotationMatrixFromVector[0]}   ${rotationMatrixFromVector[1]}    ${rotationMatrixFromVector[2]} \n" +
 //                "${rotationMatrixFromVector[3]}   ${rotationMatrixFromVector[4]}    ${rotationMatrixFromVector[5]} \n" +
 //                "${rotationMatrixFromVector[6]}   ${rotationMatrixFromVector[7]}    ${rotationMatrixFromVector[8]} \n"
 //        )
         SensorManager.getOrientation(rotationMatrixFromVector, orientationAnglesFromVector)
-//        Log.e(
+//        Log.d(
 //            "对比", "通过getRotationMatrix计算的旋转矩阵欧拉角：" +
 //                    "${orientationAngles[0] * 180 / Math.PI}   ${orientationAngles[1] * 180 / Math.PI}  ${orientationAngles[2] * 180 / Math.PI}  \n" +
 //                    "通过getRotationMatrixFromVector计算的旋转矩阵欧拉角：" +
@@ -189,10 +146,6 @@ class DeviceAttitudeHandler(
 //        )
     }
 
-    @Suppress("unused")
-    companion object {
-        private const val NS2S = 1.0f / 1000000000.0f
-    }
 
     override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {}
 }

@@ -172,7 +172,7 @@ class StepDetectionHandler(
 
     override fun onStart(owner: LifecycleOwner) {
         super.onStart(owner)
-        sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL)
+        sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_GAME)
     }
 
     override fun onStop(owner: LifecycleOwner) {

@@ -1,5 +1,6 @@
 package edu.ysu.sensor.util
 
+import android.util.Log
 import edu.ysu.sensor.entity.Location
 import kotlin.math.cos
 import kotlin.math.sin
@@ -32,6 +33,7 @@ object PDRUtil {
      */
     fun computeNextStep(stepSize: Float, bearing: Float): Location {
         val newLocation = mCurrentLocation.copy()
+        Log.e("测试", "computeNextStep: $newLocation,$bearing")
         val newX = mCurrentLocation.x - stepSize * sin(bearing * Math.PI / 180)
         val newY = mCurrentLocation.y - stepSize * cos(bearing * Math.PI / 180)
         newLocation.x = newX
